@@ -1,0 +1,167 @@
+version: 1
+approval: CNPA requested 2026-10-11; established reading-only scope
+course:
+  id: ATS077
+  certification:
+    name: Certified Cloud Native Platform Engineering Associate
+    code: CNPA
+    provider: CNCF / Linux Foundation
+    domain: Platform Engineering Core Fundamentals
+    weight: 36
+    competencies:
+    - Declarative Resource Management
+    - DevOps Practices in Platform Engineering
+    - Application Environments and Infrastructure Concepts
+    - Platform Architecture and Capabilities
+    - Platform Engineering Goals, Objectives, and Approaches
+    - Continuous Integration Fundamentals
+    - Continuous Delivery and GitOps
+defaults:
+  playground: false
+  module_lab: false
+  capstone: false
+  section_quiz: false
+  final_quiz: true
+assessment_format: YAML question banks v1, registered in assessments/index.yaml
+sections:
+- id: section-010
+  title: Declarative Resource Management
+  curriculum_item: Declarative Resource Management
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: Sufficient Intent, Rendering And Controller Contracts
+    objectives:
+    - Assess whether a declaration expresses sufficient managed intent.
+    - Explain rendering inputs and controller ownership.
+    - Distinguish declarative management from a script stored in version control.
+    outline:
+    - Sufficient Intent, Rendering And Controller Contracts
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-010/module-01/course-01-sufficient-intent-rendering-and-controller-contracts.md
+      adapted_from: ATS065/sections/section-010/module-01/course-01-sufficient-intent-rendering-and-controller-contracts.md
+- id: section-020
+  title: DevOps Practices in Platform Engineering
+  curriculum_item: DevOps Practices in Platform Engineering
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: Shared Ownership, Feedback And Platform Enablement
+    objectives:
+    - Explain DevOps and DevSecOps as collaborative practices.
+    - Distinguish platform enablement from transferring every responsibility.
+    - Reason about feedback, security and supported service boundaries.
+    outline:
+    - Shared Ownership, Feedback And Platform Enablement
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-020/module-01/course-01-shared-ownership-feedback-and-platform-enablement.md
+      adapted_from: null
+- id: section-030
+  title: Application Environments and Infrastructure Concepts
+  curriculum_item: Application Environments and Infrastructure Concepts
+  capstone: false
+  section_quiz: true
+  modules:
+  - id: module-01
+    title: Environment Boundaries, Dependencies And Resource Isolation
+    objectives:
+    - Distinguish development, test and production environments by purpose.
+    - Explain identity, data and capacity separation.
+    - Reason about configuration parity without assuming identical conditions.
+    outline:
+    - Environment Boundaries, Dependencies And Resource Isolation
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-030/module-01/course-01-environment-boundaries-dependencies-and-resource-isolation.md
+      adapted_from: null
+- id: section-040
+  title: Platform Architecture and Capabilities
+  curriculum_item: Platform Architecture and Capabilities
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: Capability Layers, Control Planes And Supported Interfaces
+    objectives:
+    - Describe platform capability, control and implementation layers.
+    - Distinguish developer interfaces from the systems performing work.
+    - Reason about composability, failure domains and ownership.
+    outline:
+    - Capability Layers, Control Planes And Supported Interfaces
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-040/module-01/course-01-capability-layers-control-planes-and-supported-interfaces.md
+      adapted_from: null
+- id: section-050
+  title: Platform Engineering Goals, Objectives, and Approaches
+  curriculum_item: Platform Engineering Goals, Objectives, and Approaches
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: User Needs, Golden Paths And Incremental Platform Adoption
+    objectives:
+    - Explain platform goals in terms of user outcomes.
+    - Distinguish a supported golden path from a universal mandate.
+    - Reason about feedback, prioritization and adoption evidence.
+    outline:
+    - User Needs, Golden Paths And Incremental Platform Adoption
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-050/module-01/course-01-user-needs-golden-paths-and-incremental-platform-adoption.md
+      adapted_from: null
+- id: section-060
+  title: Continuous Integration Fundamentals
+  curriculum_item: Continuous Integration Fundamentals
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: Build And Release Pipelines
+    objectives:
+    - Trace source changes through build, checks and artifact publication.
+    - Explain what continuous integration checks.
+    - Distinguish continuous delivery from continuous deployment.
+    - Relate release identity to an immutable artifact.
+    outline:
+    - Source Changes And Build Evidence
+    - Delivery, Deployment And Promotion Decisions
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-060/module-01/course-01-source-changes-and-build-evidence.md
+      adapted_from: ATS039/sections/section-010/module-01/course-01-source-changes-and-build-evidence.md
+    - reading: sections/section-060/module-01/course-02-delivery-deployment-and-promotion-decisions.md
+      adapted_from: ATS039/sections/section-010/module-01/course-02-delivery-deployment-and-promotion-decisions.md
+- id: section-070
+  title: Continuous Delivery and GitOps
+  curriculum_item: Continuous Delivery and GitOps
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: GitOps And Deployment Configuration
+    objectives:
+    - Explain declarative, versioned desired state.
+    - Describe pull-based reconciliation and drift correction.
+    - Compare Helm templating with Kustomize overlays.
+    - Identify what a GitOps controller cannot infer from repository state.
+    outline:
+    - GitOps Reconciliation And Drift
+    - Helm, Kustomize And Configuration Rendering
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-070/module-01/course-01-gitops-reconciliation-and-drift.md
+      adapted_from: ATS039/sections/section-010/module-02/course-01-gitops-reconciliation-and-drift.md
+    - reading: sections/section-070/module-01/course-02-helm-kustomize-and-configuration-rendering.md
+      adapted_from: ATS039/sections/section-010/module-02/course-02-helm-kustomize-and-configuration-rendering.md
