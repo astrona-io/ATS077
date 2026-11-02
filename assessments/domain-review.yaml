@@ -1,0 +1,247 @@
+schema_version: 1
+kind: question_bank
+id: ats077-domain-review
+course_id: ATS077
+exam_code: CNPA
+status: draft
+provenance: Original practice material; not official examination questions.
+scope:
+  type: domain
+  id: domain-review
+  title: Platform Engineering Core Fundamentals
+placement:
+  position: after
+  reading: sections/section-070/module-01/course-03-summary.md
+questions:
+- id: ats077-domain-review-q01
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Describe platform capability, control and implementation layers.
+  source_readings:
+  - sections/section-040/module-01/course-01-capability-layers-control-planes-and-supported-interfaces.md
+  prompt: What role does a platform API primarily serve?
+  options:
+  - id: a
+    text: A supported contract for requesting and observing capabilities.
+    explanation: It separates user intent from implementation details.
+  - id: b
+    text: A guarantee that every provider is always available.
+    explanation: Dependencies can fail.
+  - id: c
+    text: Only a collection of decorative links.
+    explanation: An API has operational contracts.
+  correct_option: a
+  explanation: It separates user intent from implementation details.
+- id: ats077-domain-review-q02
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Distinguish developer interfaces from the systems performing work.
+  source_readings:
+  - sections/section-040/module-01/course-01-capability-layers-control-planes-and-supported-interfaces.md
+  prompt: Does a portal itself provision every displayed resource?
+  options:
+  - id: a
+    text: Yes; browser rendering replaces all controllers.
+    explanation: Controllers still act.
+  - id: b
+    text: Yes; every catalog entity is a live provider resource.
+    explanation: Catalog data is descriptive.
+  - id: c
+    text: No; it invokes or presents the systems responsible for the work.
+    explanation: Interface and implementation are distinct.
+  correct_option: c
+  explanation: Interface and implementation are distinct.
+- id: ats077-domain-review-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Reason about composability, failure domains and ownership.
+  source_readings:
+  - sections/section-040/module-01/course-01-capability-layers-control-planes-and-supported-interfaces.md
+  prompt: Why design capability boundaries deliberately?
+  options:
+  - id: a
+    text: They require every team to use every feature.
+    explanation: Composable adoption can be selective.
+  - id: b
+    text: They make ownership, composition and failure handling understandable.
+    explanation: Boundaries support independent reasoning.
+  - id: c
+    text: They eliminate all need for status.
+    explanation: Status remains essential.
+  correct_option: b
+  explanation: Boundaries support independent reasoning.
+- id: ats077-domain-review-q04
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain platform goals in terms of user outcomes.
+  source_readings:
+  - sections/section-050/module-01/course-01-user-needs-golden-paths-and-incremental-platform-adoption.md
+  prompt: Which goal is more useful than maximizing installed plugins?
+  options:
+  - id: a
+    text: Reduce the time and difficulty of a defined developer task.
+    explanation: It connects capability to outcome.
+  - id: b
+    text: Count every interface button.
+    explanation: Activity does not establish usefulness.
+  - id: c
+    text: Force every team into every capability.
+    explanation: That can create avoidable friction.
+  correct_option: a
+  explanation: It connects capability to outcome.
+- id: ats077-domain-review-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Distinguish a supported golden path from a universal mandate.
+  source_readings:
+  - sections/section-050/module-01/course-01-user-needs-golden-paths-and-incremental-platform-adoption.md
+  prompt: What is a golden path in this context?
+  options:
+  - id: a
+    text: A guarantee that no application can ever fail.
+    explanation: No workflow provides that guarantee.
+  - id: b
+    text: A secret administrator shortcut.
+    explanation: Supported paths should be understandable and governed.
+  - id: c
+    text: A supported, opinionated route for a recurring task.
+    explanation: It packages useful conventions and capabilities.
+  correct_option: c
+  explanation: It packages useful conventions and capabilities.
+- id: ats077-domain-review-q06
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Reason about feedback, prioritization and adoption evidence.
+  source_readings:
+  - sections/section-050/module-01/course-01-user-needs-golden-paths-and-incremental-platform-adoption.md
+  prompt: Why gather feedback during incremental adoption?
+  options:
+  - id: a
+    text: Because feedback replaces all security controls.
+    explanation: Controls remain necessary.
+  - id: b
+    text: Users reveal whether the path solves real problems and where it blocks them.
+    explanation: Adoption is evidence to interpret, not assume.
+  - id: c
+    text: Because every feature is valuable by definition.
+    explanation: Value depends on need and outcome.
+  correct_option: b
+  explanation: Adoption is evidence to interpret, not assume.
+- id: ats077-domain-review-q07
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Relate release identity to an immutable artifact.
+  source_readings:
+  - sections/section-060/module-01/course-01-source-changes-and-build-evidence.md
+  prompt: Staging tested digest A, but production rebuilt the same source into digest B. What should a
+    release reviewer question?
+  options:
+  - id: a
+    text: Whether staging evidence applies to the actual production artifact.
+    explanation: A new build can differ even with the same source revision.
+  - id: b
+    text: Whether both Pods share a display name.
+    explanation: Names are not artifact identity evidence.
+  - id: c
+    text: Whether CI can ever run automatically.
+    explanation: Automation is not the uncertainty in the described promotion.
+  correct_option: a
+  explanation: A new build can differ even with the same source revision.
+- id: ats077-domain-review-q08
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Trace source changes through build, checks and artifact publication.
+  source_readings:
+  - sections/section-060/module-01/course-01-source-changes-and-build-evidence.md
+  prompt: A team tested one image, then rebuilt from the same source before production. What important
+    uncertainty remains?
+  options:
+  - id: a
+    text: The tested and deployed bytes must be identical.
+    explanation: A rebuild can resolve different inputs.
+  - id: b
+    text: Testing the source automatically publishes every future image.
+    explanation: Testing and registry publication are different stages.
+  - id: c
+    text: The deployed artifact may differ because build inputs changed.
+    explanation: Source equality alone does not pin dependencies, tools or base images.
+  correct_option: c
+  explanation: Source equality alone does not pin dependencies, tools or base images.
+- id: ats077-domain-review-q09
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain what continuous integration checks.
+  source_readings:
+  - sections/section-060/module-01/course-01-source-changes-and-build-evidence.md
+  prompt: A pipeline passes unit tests but has no checks of production dependencies. What can be concluded?
+  options:
+  - id: a
+    text: Every production operation is guaranteed correct.
+    explanation: Those operations were not all tested.
+  - id: b
+    text: The configured unit checks passed, but other behavior remains unverified.
+    explanation: Evidence is bounded by the checks actually performed.
+  - id: c
+    text: The application cannot contain any defect.
+    explanation: Passing selected checks is not complete correctness proof.
+  correct_option: b
+  explanation: Evidence is bounded by the checks actually performed.
+- id: ats077-domain-review-q10
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Describe pull-based reconciliation and drift correction.
+  source_readings:
+  - sections/section-070/module-01/course-01-gitops-reconciliation-and-drift.md
+  prompt: An emergency live change is undone by the delivery controller. What should the team inspect?
+  options:
+  - id: a
+    text: Declared desired state and the controller's drift correction policy.
+    explanation: Reconciliation can restore intent from the managed source.
+  - id: b
+    text: Only the registry image pull policy.
+    explanation: Pull policy affects artifact retrieval, not restoration of declarative live configuration.
+  - id: c
+    text: The container image's filesystem layers only.
+    explanation: Artifact packaging does not explain the desired replica or configuration restoration.
+  correct_option: a
+  explanation: Reconciliation can restore intent from the managed source.
+- id: ats077-domain-review-q11
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Describe pull-based reconciliation and drift correction.
+  source_readings:
+  - sections/section-070/module-01/course-01-gitops-reconciliation-and-drift.md
+  prompt: A live replica count is manually changed, and a GitOps controller later restores the versioned
+    value. What happened?
+  options:
+  - id: a
+    text: Git automatically executed the application source code.
+    explanation: A controller implements the resource reconciliation.
+  - id: b
+    text: Helm must have added a node.
+    explanation: Replica intent and node capacity are separate operations.
+  - id: c
+    text: Reconciliation corrected drift according to its policy.
+    explanation: The live state differed from declared intent.
+  correct_option: c
+  explanation: The live state differed from declared intent.
+- id: ats077-domain-review-q12
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Identify what a GitOps controller cannot infer from repository state.
+  source_readings:
+  - sections/section-070/module-01/course-01-gitops-reconciliation-and-drift.md
+  prompt: A team commits manifests to Git but applies them only by hand, with no automated pull or reconciliation.
+    What is missing from GitOps?
+  options:
+  - id: a
+    text: A requirement that every application use microservices.
+    explanation: GitOps principles do not require that application architecture.
+  - id: b
+    text: Automatic retrieval and continuous reconciliation.
+    explanation: Versioned storage alone does not implement the operating principles.
+  - id: c
+    text: A rule that all Git commits are container images.
+    explanation: Configuration history and runtime artifacts are different objects.
+  correct_option: b
+  explanation: Versioned storage alone does not implement the operating principles.

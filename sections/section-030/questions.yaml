@@ -1,0 +1,187 @@
+schema_version: 1
+kind: question_bank
+id: ats077-section-030
+course_id: ATS077
+exam_code: CNPA
+status: draft
+provenance: Original practice material; not official examination questions.
+scope:
+  type: section
+  id: section-030
+  title: 'Checkpoint: Sufficient Intent, Rendering And Controller Contracts, Shared Ownership, Feedback
+    And Platform Enablement, Environment Boundaries, Dependencies And Resource Isolation'
+placement:
+  position: after
+  reading: sections/section-030/module-01/course-02-summary.md
+questions:
+- id: ats077-section-030-q01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Assess whether a declaration expresses sufficient managed intent.
+  source_readings:
+  - sections/section-010/module-01/course-01-sufficient-intent-rendering-and-controller-contracts.md
+  prompt: Does a command script become declarative merely by being committed?
+  options:
+  - id: a
+    text: No; its meaning still prescribes a procedure.
+    explanation: Storage and input semantics are different.
+  - id: b
+    text: Yes; every file in Git is declarative.
+    explanation: Git can store many forms of content.
+  - id: c
+    text: Yes; a filename ending in YAML proves it.
+    explanation: Format does not establish intended-state meaning.
+  correct_option: a
+  explanation: Storage and input semantics are different.
+- id: ats077-section-030-q02
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Explain rendering inputs and controller ownership.
+  source_readings:
+  - sections/section-010/module-01/course-01-sufficient-intent-rendering-and-controller-contracts.md
+  prompt: Why include rendering dependencies in review?
+  options:
+  - id: a
+    text: Rendering never changes output.
+    explanation: It produces concrete output from inputs.
+  - id: b
+    text: Only browser fonts affect rendering tools.
+    explanation: Infrastructure rendering has its own contracts.
+  - id: c
+    text: They influence the concrete intent produced from higher-level input.
+    explanation: Changed defaults or templates can change resources.
+  correct_option: c
+  explanation: Changed defaults or templates can change resources.
+- id: ats077-section-030-q03
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Distinguish declarative management from a script stored in version control.
+  source_readings:
+  - sections/section-010/module-01/course-01-sufficient-intent-rendering-and-controller-contracts.md
+  prompt: What else matters after schema validation passes?
+  options:
+  - id: a
+    text: Every historical database row is restored.
+    explanation: Schema validity does not recover data.
+  - id: b
+    text: Policy, ownership and whether the target can satisfy intent.
+    explanation: Shape validity is narrower than safe operation.
+  - id: c
+    text: Nothing; all valid requests always converge.
+    explanation: Capacity and permissions can block them.
+  correct_option: b
+  explanation: Shape validity is narrower than safe operation.
+- id: ats077-section-030-q04
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Explain DevOps and DevSecOps as collaborative practices.
+  source_readings:
+  - sections/section-020/module-01/course-01-shared-ownership-feedback-and-platform-enablement.md
+  prompt: What is a useful DevOps goal for a platform?
+  options:
+  - id: a
+    text: Help teams deliver and operate changes through shared feedback and responsibility.
+    explanation: The practice concerns collaboration and outcomes.
+  - id: b
+    text: Remove all application-team responsibility.
+    explanation: Domain decisions remain with application owners.
+  - id: c
+    text: Measure success only by installed tools.
+    explanation: Tools do not establish outcomes.
+  correct_option: a
+  explanation: The practice concerns collaboration and outcomes.
+- id: ats077-section-030-q05
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Distinguish platform enablement from transferring every responsibility.
+  source_readings:
+  - sections/section-020/module-01/course-01-shared-ownership-feedback-and-platform-enablement.md
+  prompt: How should security fit the delivery lifecycle?
+  options:
+  - id: a
+    text: Only after every production incident.
+    explanation: That delays prevention and feedback.
+  - id: b
+    text: Only as a browser color.
+    explanation: Presentation does not enforce controls.
+  - id: c
+    text: Through appropriate controls and feedback throughout the lifecycle.
+    explanation: A final scan alone leaves earlier boundaries uncovered.
+  correct_option: c
+  explanation: A final scan alone leaves earlier boundaries uncovered.
+- id: ats077-section-030-q06
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Reason about feedback, security and supported service boundaries.
+  source_readings:
+  - sections/section-020/module-01/course-01-shared-ownership-feedback-and-platform-enablement.md
+  prompt: What should a platform service boundary clarify?
+  options:
+  - id: a
+    text: That no capability needs an operator.
+    explanation: Services still need operation.
+  - id: b
+    text: What the platform provides and what its users still own.
+    explanation: Clear responsibility makes failures actionable.
+  - id: c
+    text: That every error belongs to the user automatically.
+    explanation: That creates an unhelpful ownership gap.
+  correct_option: b
+  explanation: Clear responsibility makes failures actionable.
+- id: ats077-section-030-q07
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Distinguish development, test and production environments by purpose.
+  source_readings:
+  - sections/section-030/module-01/course-01-environment-boundaries-dependencies-and-resource-isolation.md
+  prompt: Why separate development credentials from production authority?
+  options:
+  - id: a
+    text: A development mistake should not inherit unrelated production access.
+    explanation: Identity is an actual control boundary.
+  - id: b
+    text: A folder named dev automatically blocks all network traffic.
+    explanation: Names do not enforce isolation.
+  - id: c
+    text: Every developer process is harmless by definition.
+    explanation: It can act with supplied authority.
+  correct_option: a
+  explanation: Identity is an actual control boundary.
+- id: ats077-section-030-q08
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Explain identity, data and capacity separation.
+  source_readings:
+  - sections/section-030/module-01/course-01-environment-boundaries-dependencies-and-resource-isolation.md
+  prompt: What does using the same identified artifact across environments help reduce?
+  options:
+  - id: a
+    text: Every difference in data and traffic.
+    explanation: Those remain environment inputs.
+  - id: b
+    text: The need for any configuration review.
+    explanation: Configuration still matters.
+  - id: c
+    text: Variation from rebuilding different content.
+    explanation: Runtime conditions can still differ.
+  correct_option: c
+  explanation: Runtime conditions can still differ.
+- id: ats077-section-030-q09
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Reason about configuration parity without assuming identical conditions.
+  source_readings:
+  - sections/section-030/module-01/course-01-environment-boundaries-dependencies-and-resource-isolation.md
+  prompt: Why plan temporary-environment cleanup?
+  options:
+  - id: a
+    text: All temporary environments are stateless.
+    explanation: They can contain persistent resources.
+  - id: b
+    text: Resources, credentials and data can outlive the intended use.
+    explanation: Lifecycle controls prevent forgotten exposure and cost.
+  - id: c
+    text: Temporary names automatically delete every database.
+    explanation: Names do not establish cleanup.
+  correct_option: b
+  explanation: Lifecycle controls prevent forgotten exposure and cost.
