@@ -38,7 +38,7 @@ modules:
 - id: module-010
   title: Declarative Resource Management
   description: Developed reading and reasoning for Declarative Resource Management.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: Declarative Resource Management
@@ -55,7 +55,7 @@ modules:
 - id: module-020
   title: DevOps Practices in Platform Engineering
   description: Developed reading and reasoning for DevOps Practices in Platform Engineering.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: DevOps Practices in Platform Engineering
@@ -72,7 +72,7 @@ modules:
 - id: module-030
   title: Application Environments and Infrastructure Concepts
   description: Developed reading and reasoning for Application Environments and Infrastructure Concepts.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: Application Environments and Infrastructure Concepts
@@ -89,7 +89,7 @@ modules:
 - id: module-040
   title: Platform Architecture and Capabilities
   description: Developed reading and reasoning for Platform Architecture and Capabilities.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: Platform Architecture and Capabilities
@@ -106,7 +106,7 @@ modules:
 - id: module-050
   title: Platform Engineering Goals, Objectives, and Approaches
   description: Developed reading and reasoning for Platform Engineering Goals, Objectives, and Approaches.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: Platform Engineering Goals, Objectives, and Approaches
@@ -123,7 +123,7 @@ modules:
 - id: module-060
   title: Continuous Integration Fundamentals
   description: Developed reading and reasoning for Continuous Integration Fundamentals.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: Continuous Integration Fundamentals
@@ -143,7 +143,7 @@ modules:
 - id: module-070
   title: Continuous Delivery and GitOps
   description: Developed reading and reasoning for Continuous Delivery and GitOps.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: Continuous Delivery and GitOps
