@@ -1,5 +1,7 @@
 # Reusable Question Banks
 
+The graded quizzes that Astrona runs are the `quiz.yaml` file in each section and `sections/final-domain-quiz.yaml`, and `astrona.yaml` lists them as `type: quiz` entries with `pass_score: 70`. The banks described below (`assessments/index.yaml`, `assessments/domain-review.yaml` and `sections/section-030/questions.yaml`) are older author material and are not listed in `astrona.yaml`.
+
 `assessments/index.yaml` lists banks in teaching order. Each bank uses schema
 version 1 and the contract in `schemas/question-bank.schema.json`. This is an
 authoring format for future application integration, not an existing Astrona

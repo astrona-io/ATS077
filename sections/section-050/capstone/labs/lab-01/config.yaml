@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Platform Goals Capstone (LAB, capstone). Graded against the live
+# cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-077-capstone-050
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - ghcr.io/stefanprodan/podinfo:6.15.0
+      - mccutchen/go-httpbin:2.25.0
+      - curlimages/curl:8.22.0
+
+# Starting state: the Starfleet workloads and an adopt namespace with three Deployments: one on the golden path, one that claims the path and does not meet it, and one off the path
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: Create the starting state
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the cluster settled after the solution
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: engine-on-path
+      description: engine-web in adopt meets every golden path setting and still runs the original image
+      type: file
+      source: validation/validate-engine-on-path.sh
+      hint: engine-web claims the path label but has no probe, no resources and no security context. Add them without changing the image, and keep the Deployment running.
+    - name: exception-recorded
+      description: drifter-web is labelled as an exception with a reason and a review date, and is not claimed as golden
+      type: file
+      source: validation/validate-exception-recorded.sh
+      hint: Label platform.starfleet.io/path=exception and annotate platform.starfleet.io/exception-reason and platform.starfleet.io/exception-review.
+    - name: adoption-report
+      description: The ConfigMap adoption-report in adopt matches the counts derived from the cluster
+      type: file
+      source: validation/validate-adoption-report.sh
+      hint: Count verified workloads, exceptions and the total with kubectl and jq, then create the ConfigMap with keys onpath, exceptions and total.
+    - name: workloads-running
+      description: scout, probe and shuttle are still available with their original images
+      type: file
+      source: validation/validate-workloads-running.sh
+      hint: Do not delete, scale down or replace the starfleet Deployments.
+
+teardown:
+  keepCluster: false

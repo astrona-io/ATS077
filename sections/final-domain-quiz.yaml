@@ -1,0 +1,253 @@
+# Final domain quiz. Listed in astrona.yaml as a `type: quiz` entry after section 070.
+schema_version: 1
+kind: question_bank
+id: ats077-final
+course_id: ATS077
+exam_code: CNPA
+status: draft
+provenance: Original practice material written for this course; not official exam questions.
+scope:
+  type: domain
+  id: domain-final
+  title: "Platform Engineering Core Fundamentals"
+questions:
+  - id: ats077-final-q01
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain drift between declared and live state"
+    source_readings:
+      - sections/section-010/module-01/course-03-ownership-drift-and-field-managers.md
+    prompt: |-
+      A Deployment is applied from a file, and an operator later scales it by hand. Which statement describes the situation?
+    options:
+      - id: a
+        text: "Nothing differs, because the API server stores one object."
+        explanation: "The file and the live object now disagree about replicas."
+      - id: b
+        text: "The live state drifted from the declared state, and the next apply or a reconciling controller decides which value wins."
+        explanation: "Correct. Ownership and reconciliation policy decide the outcome."
+      - id: c
+        text: "The file is deleted."
+        explanation: "Files are not changed by cluster edits."
+      - id: d
+        text: "Kubernetes rejects manual scaling."
+        explanation: "Manual scaling is allowed."
+    correct_option: b
+    explanation: "Drift is a difference, and policy decides the correction."
+
+  - id: ats077-final-q02
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Use feedback signals to judge a rollout"
+    source_readings:
+      - sections/section-020/module-01/course-02-feedback-signals-probes-and-rollouts.md
+    prompt: |-
+      A team ships a new version and wants early evidence that users are not harmed. Which signal fits that purpose best?
+    options:
+      - id: a
+        text: "The number of commits in the release."
+        explanation: "Commit counts say nothing about user impact."
+      - id: b
+        text: "A liveness probe alone."
+        explanation: "It reports process health only."
+      - id: c
+        text: "Feedback from probes and rollout status combined with application-level measurements of the change."
+        explanation: "Correct. Release feedback needs evidence about behavior."
+      - id: d
+        text: "The size of the container image."
+        explanation: "Size does not show user harm."
+    correct_option: c
+    explanation: "Combine rollout status with behavior evidence."
+
+  - id: ats077-final-q03
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Relate quotas to capacity isolation"
+    source_readings:
+      - sections/section-030/module-01/course-02-quotas-limits-and-capacity-isolation.md
+    prompt: |-
+      A shared namespace has no ResourceQuota. One team starts many pods. What is the risk?
+    options:
+      - id: a
+        text: "That team can use capacity that other teams in the environment need."
+        explanation: "Correct. Quotas bound consumption per namespace."
+      - id: b
+        text: "The API server refuses all new pods."
+        explanation: "Without a quota nothing limits them."
+      - id: c
+        text: "Pods run slower for that team only."
+        explanation: "Contention affects others as well."
+      - id: d
+        text: "Nothing, because the scheduler enforces fairness between teams."
+        explanation: "The scheduler does not impose team limits."
+    correct_option: a
+    explanation: "Without a quota one team consumes shared capacity."
+
+  - id: ats077-final-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain what a controller does for a platform API"
+    source_readings:
+      - sections/section-040/module-01/course-02-a-custom-resource-as-a-platform-api.md
+    prompt: |-
+      A platform exposes a custom resource as an API for teams. What does a controller for that resource do?
+    options:
+      - id: a
+        text: "It stores the resource in a database for the team."
+        explanation: "Storage is the API server's role."
+      - id: b
+        text: "It replaces the API server."
+        explanation: "It extends the API with desired state."
+      - id: c
+        text: "It validates YAML syntax in the editor."
+        explanation: "Editing is a client concern."
+      - id: d
+        text: "It watches the resource and creates or updates the objects needed to match what the resource declares."
+        explanation: "Correct. The controller turns declared intent into running objects."
+    correct_option: d
+    explanation: "The resource declares intent and the controller reconciles it."
+
+  - id: ats077-final-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Handle exceptions to a golden path"
+    source_readings:
+      - sections/section-050/module-01/course-03-adoption-feedback-and-exceptions.md
+    prompt: |-
+      A team cannot use the golden path because of a regulatory constraint. Which response keeps the platform trustworthy?
+    options:
+      - id: a
+        text: "Remove the constraint from the path for everyone."
+        explanation: "This weakens the path for the teams that can use it."
+      - id: b
+        text: "Record the exception with its reason and keep measuring adoption honestly."
+        explanation: "Correct. A visible exception keeps the numbers truthful."
+      - id: c
+        text: "Count the team as adopted so the report looks better."
+        explanation: "This falsifies the signal."
+      - id: d
+        text: "Block the team until it complies."
+        explanation: "This stops delivery without learning."
+    correct_option: b
+    explanation: "Exceptions are recorded, not hidden."
+
+  - id: ats077-final-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Relate release identity to an immutable artifact"
+    source_readings:
+      - sections/section-060/module-01/course-01-source-changes-and-build-evidence.md
+    prompt: |-
+      A pipeline reaches production with an image tagged `6.15.0`. Why is the tag alone weak evidence of what runs?
+    options:
+      - id: a
+        text: "Tags are not allowed in production."
+        explanation: "Tags are allowed."
+      - id: b
+        text: "A tag can later point to different content, while a digest identifies the exact bytes."
+        explanation: "Correct. A digest does not move."
+      - id: c
+        text: "Kubernetes ignores tags."
+        explanation: "Kubernetes pulls by tag."
+      - id: d
+        text: "Tags are encrypted."
+        explanation: "They are plain text."
+    correct_option: b
+    explanation: "Record the digest for evidence."
+
+  - id: ats077-final-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Tie a commit to the synced revision"
+    source_readings:
+      - sections/section-070/module-01/course-03-promotion-through-git-and-revision-evidence.md
+    prompt: |-
+      A promotion commit is pushed and the Application shows a synced revision different from the head of the branch. What is the correct reading?
+    options:
+      - id: a
+        text: "Delivery is complete."
+        explanation: "The revisions would match."
+      - id: b
+        text: "The controller has not reached the commit, or it failed to render or apply it, so the conditions need reading."
+        explanation: "Correct. Equal revisions are the evidence of delivery."
+      - id: c
+        text: "The branch is protected."
+        explanation: "This is not implied."
+      - id: d
+        text: "The commit was reverted."
+        explanation: "A revert would be another commit."
+    correct_option: b
+    explanation: "Compare the synced revision with the head."
+
+  - id: ats077-final-q08
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Handle sensitive data in a configuration repository"
+    source_readings:
+      - sections/section-070/module-01/course-01-gitops-reconciliation-and-drift.md
+    prompt: |-
+      A configuration repository contains a plaintext password in an old commit and the current file no longer has it. What is true?
+    options:
+      - id: a
+        text: "The value is gone from the repository."
+        explanation: "History keeps it."
+      - id: b
+        text: "Anyone with read access to the history can still read it, so the value needs to be rotated."
+        explanation: "Correct. Removing a line does not remove history."
+      - id: c
+        text: "Only the controller can read history."
+        explanation: "History is readable by anyone with access."
+      - id: d
+        text: "Reconciliation deletes old commits."
+        explanation: "It never edits history."
+    correct_option: b
+    explanation: "Rotate any value that reached history."
+
+  - id: ats077-final-q09
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Give pipeline stages narrow identities"
+    source_readings:
+      - sections/section-060/module-01/course-03-pipeline-identities-release-records-and-rollback.md
+    prompt: |-
+      Which pair of platform choices follows least privilege for a delivery pipeline?
+    options:
+      - id: a
+        text: "One cluster-admin account for every stage."
+        explanation: "A leak would reach everything."
+      - id: b
+        text: "A separate ServiceAccount per stage, each with a Role limited to the namespace and verbs it needs."
+        explanation: "Correct. Narrow identities limit the damage of a leak."
+      - id: c
+        text: "A shared account that can read all Secrets."
+        explanation: "Secrets are not needed for delivery."
+      - id: d
+        text: "The build account also deploys to production."
+        explanation: "This joins trust boundaries."
+    correct_option: b
+    explanation: "Use per-stage identities with scoped Roles."
+
+  - id: ats077-final-q10
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Review rendered output"
+    source_readings:
+      - sections/section-070/module-01/course-02-helm-kustomize-and-configuration-rendering.md
+    prompt: |-
+      Why are Helm and Kustomize outputs reviewed before they are reconciled?
+    options:
+      - id: a
+        text: "Rendering signs the manifests."
+        explanation: "Rendering does not sign."
+      - id: b
+        text: "The API receives the rendered resources, so names, namespaces, selectors and images must be correct there."
+        explanation: "Correct. A good-looking input can render a wrong resource."
+      - id: c
+        text: "Review is only needed for Helm."
+        explanation: "Both tools render."
+      - id: d
+        text: "Rendered output is identical to the inputs."
+        explanation: "Rendering transforms the inputs."
+    correct_option: b
+    explanation: "Review what the API receives."
+

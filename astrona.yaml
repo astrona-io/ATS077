@@ -1,9 +1,9 @@
-# Reading-only content; YAML knowledge checks have a separate index.
+# Hands-on course: readings, playgrounds, module labs, section capstones and quizzes. Built untested.
 training:
   id: ATS077
   title: 'CNPA: Platform Engineering Core Fundamentals'
-  description: 'Detailed reading material and reusable YAML knowledge checks for CNPA: Platform Engineering
-    Core Fundamentals. Technical content remains draft. No labs or playgrounds.'
+  description: 'Hands-on preparation for CNPA: Platform Engineering Core Fundamentals. Each section has
+    readings, a playground, a module lab, a graded capstone and a quiz. Content is draft and the labs are untested.'
   certification:
     name: Certified Cloud Native Platform Engineering Associate
     code: CNPA
@@ -36,127 +36,502 @@ modules:
     title: How This Course Is Made
     path: sections/intro/course-03-how-this-course-is-made.md
 - id: module-010
-  title: Declarative Resource Management
-  description: Developed reading and reasoning for Declarative Resource Management.
-  maturity: alpha
+  title: "Declarative Resource Management"
+  description: >
+    Makes the reader able to state desired state as resources, render it with Kustomize, and explain how controllers, owner references, field managers and status keep the live system matching the declaration.
+  status: alpha
+
   content:
-  - type: reading
-    title: Declarative Resource Management
-    path: sections/section-010/README.md
-  - type: reading
-    title: Sufficient Intent, Rendering And Controller Contracts
-    path: sections/section-010/module-01/course.md
-  - type: reading
-    title: Sufficient Intent, Rendering And Controller Contracts
-    path: sections/section-010/module-01/course-01-sufficient-intent-rendering-and-controller-contracts.md
-  - type: reading
-    title: Summary
-    path: sections/section-010/module-01/course-02-summary.md
+    - type: reading
+      title: "Section Overview"
+      path: sections/section-010/README.md
+    - type: reading
+      title: "Sufficient Intent, Rendering And Controller Contracts"
+      path: sections/section-010/module-01/course.md
+    - type: reading
+      title: "Desired State, The API Server And Controllers"
+      path: sections/section-010/module-01/course-01-sufficient-intent-rendering-and-controller-contracts.md
+    - type: reading
+      title: "Rendering Declarations With Kustomize"
+      path: sections/section-010/module-01/course-02-rendering-declarations-with-kustomize.md
+    - type: reading
+      title: "Ownership, Drift And Field Managers"
+      path: sections/section-010/module-01/course-03-ownership-drift-and-field-managers.md
+    - type: reading
+      title: "Question"
+      path: sections/section-010/module-01/labs/lab-01/question.md
+    - type: lab
+      title: "Declare, Render And Apply Under A Field Manager Lab"
+      path: sections/section-010/module-01/labs/lab-01
+      difficulty: intermediate
+      estimated_duration: 25m
+      topic: declarative-management
+      task_kind: build
+      tags: [kustomize, deployment, owner-reference, server-side-apply, field-manager]
+      learning_goals:
+        - Replace a bare pod with a Deployment so a controller owns it
+        - Render an overlay with a namespace, a name prefix, a label and a replica patch
+        - Apply the render with server-side apply under a named field manager
+      resources:
+        - name: "Declarative management of Kubernetes objects using Kustomize"
+          url: https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/
+        - name: "Server-Side Apply"
+          url: https://kubernetes.io/docs/reference/using-api/server-side-apply/
+    - type: reading
+      title: "Summary"
+      path: sections/section-010/module-01/course-04-summary.md
+    - type: reading
+      title: "Question"
+      path: sections/section-010/capstone/labs/lab-01/question.md
+    - type: lab
+      title: "Declarative Resource Management Capstone"
+      path: sections/section-010/capstone/labs/lab-01
+      difficulty: advanced
+      estimated_duration: 40m
+      topic: declarative-management
+      task_kind: build
+      tags: [kustomize, drift, server-side-apply, field-manager, generation, status]
+      learning_goals:
+        - Remove drift from a Deployment by forcing a server-side apply under a named manager
+        - Render two Deployments for another namespace from one overlay with patches
+        - Record metadata.generation and status.observedGeneration as rollout evidence
+      resources:
+        - name: "Server-Side Apply"
+          url: https://kubernetes.io/docs/reference/using-api/server-side-apply/
+        - name: "Kustomize patches"
+          url: https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/patches/
+    - type: quiz
+      title: "Knowledge Check: Declarative Resource Management"
+      path: sections/section-010/quiz.yaml
+      pass_score: 70
+
 - id: module-020
-  title: DevOps Practices in Platform Engineering
-  description: Developed reading and reasoning for DevOps Practices in Platform Engineering.
-  maturity: alpha
+  title: "DevOps Practices in Platform Engineering"
+  description: >
+    Makes the reader able to record ownership on cluster objects, read feedback from probes and rollouts, roll back a failed release, and build security and access guardrails that let a team deploy alone.
+  status: alpha
+
   content:
-  - type: reading
-    title: DevOps Practices in Platform Engineering
-    path: sections/section-020/README.md
-  - type: reading
-    title: Shared Ownership, Feedback And Platform Enablement
-    path: sections/section-020/module-01/course.md
-  - type: reading
-    title: Shared Ownership, Feedback And Platform Enablement
-    path: sections/section-020/module-01/course-01-shared-ownership-feedback-and-platform-enablement.md
-  - type: reading
-    title: Summary
-    path: sections/section-020/module-01/course-02-summary.md
+    - type: reading
+      title: "Section Overview"
+      path: sections/section-020/README.md
+    - type: reading
+      title: "Shared Ownership, Feedback And Platform Enablement"
+      path: sections/section-020/module-01/course.md
+    - type: reading
+      title: "Shared Ownership And Platform Enablement"
+      path: sections/section-020/module-01/course-01-shared-ownership-feedback-and-platform-enablement.md
+    - type: reading
+      title: "Feedback Signals: Probes, Rollouts And Rollback"
+      path: sections/section-020/module-01/course-02-feedback-signals-probes-and-rollouts.md
+    - type: reading
+      title: "DevSecOps Guardrails In The Platform"
+      path: sections/section-020/module-01/course-03-devsecops-guardrails-in-the-platform.md
+    - type: reading
+      title: "Question"
+      path: sections/section-020/module-01/labs/lab-01/question.md
+    - type: lab
+      title: "Ownership, Probes And A Restricted Namespace Lab"
+      path: sections/section-020/module-01/labs/lab-01
+      difficulty: intermediate
+      estimated_duration: 25m
+      topic: devops
+      task_kind: fix
+      tags: [labels, readiness-probe, pod-security, securitycontext, ownership]
+      learning_goals:
+        - Put an ownership label in pod templates so running pods carry it
+        - Add an HTTP readiness probe to a container
+        - Enforce the restricted Pod Security Standard and make a Deployment comply
+      resources:
+        - name: "Pod Security Admission"
+          url: https://kubernetes.io/docs/concepts/security/pod-security-admission/
+        - name: "Configure liveness, readiness and startup probes"
+          url: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+    - type: reading
+      title: "Summary"
+      path: sections/section-020/module-01/course-04-summary.md
+    - type: reading
+      title: "Question"
+      path: sections/section-020/capstone/labs/lab-01/question.md
+    - type: lab
+      title: "DevOps Practices Capstone"
+      path: sections/section-020/capstone/labs/lab-01
+      difficulty: advanced
+      estimated_duration: 40m
+      topic: devops
+      task_kind: fix
+      tags: [rollout, rollback, readiness-probe, pod-security, rbac, ownership]
+      learning_goals:
+        - Recover a stuck rollout with rollout undo and protect the next release with a readiness probe
+        - Enforce the restricted standard in a namespace and fix a workload to comply
+        - Grant a team group least-privilege deploy access with a Role and a RoleBinding
+      resources:
+        - name: "Using RBAC Authorization"
+          url: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+        - name: "Deployments"
+          url: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+    - type: quiz
+      title: "Knowledge Check: DevOps Practices in Platform Engineering"
+      path: sections/section-020/quiz.yaml
+      pass_score: 70
+
 - id: module-030
-  title: Application Environments and Infrastructure Concepts
-  description: Developed reading and reasoning for Application Environments and Infrastructure Concepts.
-  maturity: alpha
+  title: "Application Environments and Infrastructure Concepts"
+  description: >
+    Makes the reader able to separate environments with namespaces, quotas, limits, identity and data, and to keep one artifact consistent across environments with per-environment configuration.
+  status: alpha
+
   content:
-  - type: reading
-    title: Application Environments and Infrastructure Concepts
-    path: sections/section-030/README.md
-  - type: reading
-    title: Environment Boundaries, Dependencies And Resource Isolation
-    path: sections/section-030/module-01/course.md
-  - type: reading
-    title: Environment Boundaries, Dependencies And Resource Isolation
-    path: sections/section-030/module-01/course-01-environment-boundaries-dependencies-and-resource-isolation.md
-  - type: reading
-    title: Summary
-    path: sections/section-030/module-01/course-02-summary.md
+    - type: reading
+      title: "Section Overview"
+      path: sections/section-030/README.md
+    - type: reading
+      title: "Environment Boundaries, Dependencies And Resource Isolation"
+      path: sections/section-030/module-01/course.md
+    - type: reading
+      title: "Environments And The Boundaries That Separate Them"
+      path: sections/section-030/module-01/course-01-environment-boundaries-dependencies-and-resource-isolation.md
+    - type: reading
+      title: "Quotas, Limits And Capacity Isolation"
+      path: sections/section-030/module-01/course-02-quotas-limits-and-capacity-isolation.md
+    - type: reading
+      title: "Identity, Data And Environment Lifecycle"
+      path: sections/section-030/module-01/course-03-identity-data-and-environment-lifecycle.md
+    - type: reading
+      title: "Question"
+      path: sections/section-030/module-01/labs/lab-01/question.md
+    - type: lab
+      title: "Quota, Defaults And Parity Lab"
+      path: sections/section-030/module-01/labs/lab-01
+      difficulty: intermediate
+      estimated_duration: 25m
+      topic: environments
+      task_kind: build
+      tags: [resourcequota, limitrange, configmap, parity]
+      learning_goals:
+        - Cap a namespace with a ResourceQuota and give containers defaults with a LimitRange
+        - Run a workload that relies on the defaults
+        - Make ConfigMaps consistent across environments without copying production values
+      resources:
+        - name: "Resource Quotas"
+          url: https://kubernetes.io/docs/concepts/policy/resource-quotas/
+        - name: "Limit Ranges"
+          url: https://kubernetes.io/docs/concepts/policy/limit-range/
+    - type: reading
+      title: "Summary"
+      path: sections/section-030/module-01/course-04-summary.md
+    - type: reading
+      title: "Question"
+      path: sections/section-030/capstone/labs/lab-01/question.md
+    - type: lab
+      title: "Environment Boundaries Capstone"
+      path: sections/section-030/capstone/labs/lab-01
+      difficulty: advanced
+      estimated_duration: 40m
+      topic: environments
+      task_kind: fix
+      tags: [namespaces, pod-security, rbac, secrets, quota]
+      learning_goals:
+        - Label environments, enforce restricted in prod and cap test
+        - Replace a too-broad role binding with read-only access in prod
+        - Separate test data and credentials from production
+      resources:
+        - name: "Using RBAC Authorization"
+          url: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+        - name: "Secrets"
+          url: https://kubernetes.io/docs/concepts/configuration/secret/
+    - type: quiz
+      title: "Knowledge Check: Application Environments and Infrastructure Concepts"
+      path: sections/section-030/quiz.yaml
+      pass_score: 70
+
 - id: module-040
-  title: Platform Architecture and Capabilities
-  description: Developed reading and reasoning for Platform Architecture and Capabilities.
-  maturity: alpha
+  title: "Platform Architecture and Capabilities"
+  description: >
+    Makes the reader able to describe platform layers, define a custom resource as a platform API with validation, and add admission and access rules and reason about failure domains.
+  status: alpha
+
   content:
-  - type: reading
-    title: Platform Architecture and Capabilities
-    path: sections/section-040/README.md
-  - type: reading
-    title: Capability Layers, Control Planes And Supported Interfaces
-    path: sections/section-040/module-01/course.md
-  - type: reading
-    title: Capability Layers, Control Planes And Supported Interfaces
-    path: sections/section-040/module-01/course-01-capability-layers-control-planes-and-supported-interfaces.md
-  - type: reading
-    title: Summary
-    path: sections/section-040/module-01/course-02-summary.md
+    - type: reading
+      title: "Section Overview"
+      path: sections/section-040/README.md
+    - type: reading
+      title: "Capability Layers, Control Planes And Supported Interfaces"
+      path: sections/section-040/module-01/course.md
+    - type: reading
+      title: "Capability Layers And Supported Interfaces"
+      path: sections/section-040/module-01/course-01-capability-layers-control-planes-and-supported-interfaces.md
+    - type: reading
+      title: "A Custom Resource As A Platform API"
+      path: sections/section-040/module-01/course-02-a-custom-resource-as-a-platform-api.md
+    - type: reading
+      title: "Guardrails, Failure Domains And Ownership"
+      path: sections/section-040/module-01/course-03-guardrails-failure-domains-and-ownership.md
+    - type: reading
+      title: "Question"
+      path: sections/section-040/module-01/labs/lab-01/question.md
+    - type: lab
+      title: "Custom Resource As A Platform API Lab"
+      path: sections/section-040/module-01/labs/lab-01
+      difficulty: intermediate
+      estimated_duration: 25m
+      topic: platform-architecture
+      task_kind: build
+      tags: [crd, cel, status-subresource, validation]
+      learning_goals:
+        - Define a CRD with an enum, number bounds and a CEL rule
+        - Create a custom resource and write its status through the status subresource
+        - Prove that bad requests are rejected by the API server
+      resources:
+        - name: "Custom Resources"
+          url: https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/
+        - name: "CustomResourceDefinitions"
+          url: https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/
+    - type: reading
+      title: "Summary"
+      path: sections/section-040/module-01/course-04-summary.md
+    - type: reading
+      title: "Question"
+      path: sections/section-040/capstone/labs/lab-01/question.md
+    - type: lab
+      title: "Platform Architecture Capstone"
+      path: sections/section-040/capstone/labs/lab-01
+      difficulty: advanced
+      estimated_duration: 40m
+      topic: platform-architecture
+      task_kind: build
+      tags: [validating-admission-policy, cel, rbac, status-subresource, failure-policy]
+      learning_goals:
+        - Enforce a replica cap with a ValidatingAdmissionPolicy and a binding
+        - Let a team submit custom resources without writing their status
+        - Give a controller identity the right to write status and nothing more
+      resources:
+        - name: "Validating Admission Policy"
+          url: https://kubernetes.io/docs/reference/access-authn-authz/validating-admission-policy/
+        - name: "Using RBAC Authorization"
+          url: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+    - type: quiz
+      title: "Knowledge Check: Platform Architecture and Capabilities"
+      path: sections/section-040/quiz.yaml
+      pass_score: 70
+
 - id: module-050
-  title: Platform Engineering Goals, Objectives, and Approaches
-  description: Developed reading and reasoning for Platform Engineering Goals, Objectives, and Approaches.
-  maturity: alpha
+  title: "Platform Engineering Goals, Objectives, and Approaches"
+  description: >
+    Makes the reader able to turn user needs into measurable platform goals, package a golden path as a Kustomize base with team overlays, and measure adoption and exceptions from the cluster.
+  status: alpha
+
   content:
-  - type: reading
-    title: Platform Engineering Goals, Objectives, and Approaches
-    path: sections/section-050/README.md
-  - type: reading
-    title: User Needs, Golden Paths And Incremental Platform Adoption
-    path: sections/section-050/module-01/course.md
-  - type: reading
-    title: User Needs, Golden Paths And Incremental Platform Adoption
-    path: sections/section-050/module-01/course-01-user-needs-golden-paths-and-incremental-platform-adoption.md
-  - type: reading
-    title: Summary
-    path: sections/section-050/module-01/course-02-summary.md
+    - type: reading
+      title: "Section Overview"
+      path: sections/section-050/README.md
+    - type: reading
+      title: "User Needs, Golden Paths And Incremental Platform Adoption"
+      path: sections/section-050/module-01/course.md
+    - type: reading
+      title: "User Needs And Platform Goals"
+      path: sections/section-050/module-01/course-01-user-needs-golden-paths-and-incremental-platform-adoption.md
+    - type: reading
+      title: "Golden Paths With A Kustomize Base"
+      path: sections/section-050/module-01/course-02-golden-paths-with-a-kustomize-base.md
+    - type: reading
+      title: "Adoption, Feedback And Exceptions"
+      path: sections/section-050/module-01/course-03-adoption-feedback-and-exceptions.md
+    - type: reading
+      title: "Question"
+      path: sections/section-050/module-01/labs/lab-01/question.md
+    - type: lab
+      title: "Golden Path Base For Two Teams Lab"
+      path: sections/section-050/module-01/labs/lab-01
+      difficulty: intermediate
+      estimated_duration: 25m
+      topic: platform-goals
+      task_kind: build
+      tags: [kustomize, golden-path, pod-security, overlays]
+      learning_goals:
+        - Build a Kustomize base that carries the platform defaults
+        - Write one overlay per team with its own namespace, replicas and label
+        - Apply both overlays into namespaces that enforce the restricted standard
+      resources:
+        - name: "Kustomize"
+          url: https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/
+        - name: "Pod Security Standards"
+          url: https://kubernetes.io/docs/concepts/security/pod-security-standards/
+    - type: reading
+      title: "Summary"
+      path: sections/section-050/module-01/course-04-summary.md
+    - type: reading
+      title: "Question"
+      path: sections/section-050/capstone/labs/lab-01/question.md
+    - type: lab
+      title: "Platform Goals Capstone"
+      path: sections/section-050/capstone/labs/lab-01
+      difficulty: advanced
+      estimated_duration: 40m
+      topic: platform-goals
+      task_kind: build
+      tags: [adoption, golden-path, exceptions, jq]
+      learning_goals:
+        - Show that a path label is a claim and bring a workload onto the path
+        - Record an exception with a reason and a review date
+        - Report adoption from counts derived from the cluster
+      resources:
+        - name: "Labels and Selectors"
+          url: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+        - name: "Annotations"
+          url: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+    - type: quiz
+      title: "Knowledge Check: Platform Engineering Goals, Objectives, and Approaches"
+      path: sections/section-050/quiz.yaml
+      pass_score: 70
+
 - id: module-060
-  title: Continuous Integration Fundamentals
-  description: Developed reading and reasoning for Continuous Integration Fundamentals.
-  maturity: alpha
+  title: "Continuous Integration Fundamentals"
+  description: >
+    Makes the reader able to model pipeline stages with evidence, promote one artifact through environments, and use scoped identities, release records and rollback.
+  status: alpha
+
   content:
-  - type: reading
-    title: Continuous Integration Fundamentals
-    path: sections/section-060/README.md
-  - type: reading
-    title: Build And Release Pipelines
-    path: sections/section-060/module-01/course.md
-  - type: reading
-    title: Source Changes And Build Evidence
-    path: sections/section-060/module-01/course-01-source-changes-and-build-evidence.md
-  - type: reading
-    title: Delivery, Deployment And Promotion Decisions
-    path: sections/section-060/module-01/course-02-delivery-deployment-and-promotion-decisions.md
-  - type: reading
-    title: Summary
-    path: sections/section-060/module-01/course-03-summary.md
+    - type: reading
+      title: "Section Overview"
+      path: sections/section-060/README.md
+    - type: reading
+      title: "Build And Release Pipelines"
+      path: sections/section-060/module-01/course.md
+    - type: reading
+      title: "Source Changes And Build Evidence"
+      path: sections/section-060/module-01/course-01-source-changes-and-build-evidence.md
+    - type: reading
+      title: "Delivery, Deployment And Promotion Decisions"
+      path: sections/section-060/module-01/course-02-delivery-deployment-and-promotion-decisions.md
+    - type: reading
+      title: "Pipeline Identities, Release Records And Rollback"
+      path: sections/section-060/module-01/course-03-pipeline-identities-release-records-and-rollback.md
+    - type: reading
+      title: "Question"
+      path: sections/section-060/module-01/labs/lab-01/question.md
+    - type: lab
+      title: "Pipeline Stages And Promotion Lab"
+      path: sections/section-060/module-01/labs/lab-01
+      difficulty: intermediate
+      estimated_duration: 25m
+      topic: continuous-integration
+      task_kind: build
+      tags: [jobs, build-record, promotion, configmap]
+      learning_goals:
+        - Run a check stage as a Job against a source revision
+        - Write a build record that ties the revision to a pinned image
+        - Promote one image to two environments with separate configuration
+      resources:
+        - name: "Jobs"
+          url: https://kubernetes.io/docs/concepts/workloads/controllers/job/
+        - name: "ConfigMaps"
+          url: https://kubernetes.io/docs/concepts/configuration/configmap/
+    - type: reading
+      title: "Summary"
+      path: sections/section-060/module-01/course-04-summary.md
+    - type: reading
+      title: "Question"
+      path: sections/section-060/capstone/labs/lab-01/question.md
+    - type: lab
+      title: "Pipeline Fundamentals Capstone"
+      path: sections/section-060/capstone/labs/lab-01
+      difficulty: advanced
+      estimated_duration: 40m
+      topic: continuous-integration
+      task_kind: build
+      tags: [rbac, release-record, rollout-history, least-privilege]
+      learning_goals:
+        - Create separate narrow identities for build and deploy stages
+        - Release a change through staging and then production with the same image
+        - Write a release record derived from the cluster and name the revision to return to
+      resources:
+        - name: "Using RBAC Authorization"
+          url: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+        - name: "Deployments"
+          url: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+    - type: quiz
+      title: "Knowledge Check: Continuous Integration Fundamentals"
+      path: sections/section-060/quiz.yaml
+      pass_score: 70
+
 - id: module-070
-  title: Continuous Delivery and GitOps
-  description: Developed reading and reasoning for Continuous Delivery and GitOps.
-  maturity: alpha
+  title: "Continuous Delivery and GitOps"
+  description: >
+    Makes the reader able to deliver a Kustomize repository with Argo CD, explain drift and self-heal, read rendered configuration and promote a change through Git with revision evidence.
+  status: alpha
+
   content:
-  - type: reading
-    title: Continuous Delivery and GitOps
-    path: sections/section-070/README.md
-  - type: reading
-    title: GitOps And Deployment Configuration
-    path: sections/section-070/module-01/course.md
-  - type: reading
-    title: GitOps Reconciliation And Drift
-    path: sections/section-070/module-01/course-01-gitops-reconciliation-and-drift.md
-  - type: reading
-    title: Helm, Kustomize And Configuration Rendering
-    path: sections/section-070/module-01/course-02-helm-kustomize-and-configuration-rendering.md
-  - type: reading
-    title: Summary
-    path: sections/section-070/module-01/course-03-summary.md
+    - type: reading
+      title: "Section Overview"
+      path: sections/section-070/README.md
+    - type: reading
+      title: "GitOps And Deployment Configuration"
+      path: sections/section-070/module-01/course.md
+    - type: reading
+      title: "GitOps Reconciliation And Drift"
+      path: sections/section-070/module-01/course-01-gitops-reconciliation-and-drift.md
+    - type: reading
+      title: "Helm, Kustomize And Configuration Rendering"
+      path: sections/section-070/module-01/course-02-helm-kustomize-and-configuration-rendering.md
+    - type: reading
+      title: "Promotion Through Git And Revision Evidence"
+      path: sections/section-070/module-01/course-03-promotion-through-git-and-revision-evidence.md
+    - type: reading
+      title: "Question"
+      path: sections/section-070/module-01/labs/lab-01/question.md
+    - type: lab
+      title: "GitOps Delivery Lab"
+      path: sections/section-070/module-01/labs/lab-01
+      difficulty: intermediate
+      estimated_duration: 25m
+      topic: gitops
+      task_kind: build
+      tags: [argocd, application, self-heal, kustomize]
+      learning_goals:
+        - Give Argo CD read access to a private Git repository
+        - Deliver a Kustomize overlay with an automated Application
+        - Prove that a manual change is reverted by self-heal
+      resources:
+        - name: "Argo CD Automated Sync Policy"
+          url: https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/
+        - name: "Argo CD Declarative Setup"
+          url: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/
+    - type: reading
+      title: "Summary"
+      path: sections/section-070/module-01/course-04-summary.md
+    - type: reading
+      title: "Question"
+      path: sections/section-070/capstone/labs/lab-01/question.md
+    - type: lab
+      title: "GitOps And Deployment Capstone"
+      path: sections/section-070/capstone/labs/lab-01
+      difficulty: advanced
+      estimated_duration: 40m
+      topic: gitops
+      task_kind: build
+      tags: [promotion, git, revision, argocd]
+      learning_goals:
+        - Promote production to a new image with a Git commit
+        - Confirm delivery from the revision the controller synced
+        - Record the commit, revision and image in a promotion record
+      resources:
+        - name: "Argo CD Automated Sync Policy"
+          url: https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/
+        - name: "Kustomize"
+          url: https://kubectl.docs.kubernetes.io/references/kustomize/
+    - type: quiz
+      title: "Knowledge Check: Continuous Delivery and GitOps"
+      path: sections/section-070/quiz.yaml
+      pass_score: 70
+
+- id: module-final
+  title: "Final Domain Quiz"
+  description: >
+    A final check across all seven sections.
+  status: alpha
+  content:
+    - type: quiz
+      title: "Final Domain Quiz: Platform Engineering Core Fundamentals"
+      path: sections/final-domain-quiz.yaml
+      pass_score: 70

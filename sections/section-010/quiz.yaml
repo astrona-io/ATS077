@@ -1,0 +1,204 @@
+# Knowledge check for section 010. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats077-010
+course_id: ATS077
+exam_code: CNPA
+status: draft
+provenance: Original practice material written for this course; not official exam questions.
+scope:
+  type: section
+  id: section-010
+  title: "Declarative Resource Management"
+questions:
+  - id: ats077-010-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Distinguish declarative management from a script stored in version control"
+    source_readings:
+      - sections/section-010/module-01/course-01-sufficient-intent-rendering-and-controller-contracts.md
+    prompt: |-
+      A team stores a file with the commands `kubectl scale deployment scout --replicas=2` and `kubectl set image deployment/scout scout=podinfo:6.15.0` in Git and runs it after every merge. A colleague says the platform is now managed declaratively. What is the best response?
+    options:
+      - id: a
+        text: "Correct, because the file is stored in version control and reviewed."
+        explanation: "Version control stores history. It does not change what the file contains, which is a list of actions."
+      - id: b
+        text: "Not declarative: the repository holds actions, and the result of an action depends on the cluster state when it runs. A declarative repository holds the Deployment document with `replicas` and `image`."
+        explanation: "Correct. A document states the end state, and applying it twice leaves the cluster unchanged."
+      - id: c
+        text: "Correct, because `kubectl` talks to the API server, which is declarative."
+        explanation: "The API server stores intent, but a command is still an action. What matters is whether the stored input is a state or a step."
+      - id: d
+        text: "Not declarative, because commands cannot be stored in Git."
+        explanation: "Commands can be stored in Git. The issue is that they describe steps, not the desired state."
+    correct_option: b
+    explanation: "A declaration states the end state, so applying it again is safe. A list of commands states steps whose result depends on the current state."
+
+  - id: ats077-010-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain which component turns a stored declaration into running pods"
+    source_readings:
+      - sections/section-010/module-01/course-01-sufficient-intent-rendering-and-controller-contracts.md
+    prompt: |-
+      An engineer applies a Deployment with `replicas: 3`. The API server accepts it, but no pod exists a moment later. Which statement about the system is correct?
+    options:
+      - id: a
+        text: "The API server creates the pods when it stores the Deployment."
+        explanation: "The API server only validates and stores the object."
+      - id: b
+        text: "The Deployment controller creates a ReplicaSet, the ReplicaSet controller creates the Pod objects, the scheduler assigns them and the kubelet starts the containers."
+        explanation: "Correct. Each step is a separate component that watches the API server."
+      - id: c
+        text: "The kubectl client creates the pods after it receives the response."
+        explanation: "The client sends the request and exits. It does not manage pods."
+      - id: d
+        text: "etcd runs a reconciliation loop on the stored object."
+        explanation: "etcd is the database. It runs no controllers."
+    correct_option: b
+    explanation: "Intent is stored by the API server. Controllers, the scheduler and the kubelet act on it in separate steps."
+
+  - id: ats077-010-q03
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain controller ownership and what is repaired"
+    source_readings:
+      - sections/section-010/module-01/course-03-ownership-drift-and-field-managers.md
+    prompt: |-
+      In `starfleet`, one pod of the `scout` Deployment is deleted and a bare pod `scout-debug` (no owner) is deleted. A third person runs `kubectl scale deployment scout --replicas=5` and does not update the file in Git. Which result is correct?
+    options:
+      - id: a
+        text: "Both deleted pods are recreated, and the scale command is reverted by the controller."
+        explanation: "A bare pod has no controller, and the Deployment controller treats the scale as the new declaration."
+      - id: b
+        text: "The `scout` pod is recreated, the bare pod is not, and the cluster keeps 5 replicas until someone applies the file again."
+        explanation: "Correct. The ReplicaSet owns the scout pod. A change to the Deployment is the declaration for the controller, so only a comparison with the file finds the drift."
+      - id: c
+        text: "Neither pod is recreated, because deletion is permanent."
+        explanation: "The ReplicaSet recreates the owned pod."
+      - id: d
+        text: "The bare pod is recreated by the scheduler."
+        explanation: "The scheduler only assigns existing pods to nodes."
+    correct_option: b
+    explanation: "Owned objects are repaired by their controller. A change to the top-level object is a new declaration for the controller, so drift against Git needs a diff."
+
+  - id: ats077-010-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain rendering inputs and their determinism"
+    source_readings:
+      - sections/section-010/module-01/course-02-rendering-declarations-with-kustomize.md
+    prompt: |-
+      A reviewer wants to see exactly what a Kustomize overlay would send to the API server, without changing the cluster. Which command gives that?
+    options:
+      - id: a
+        text: "`kubectl apply -k overlays/outpost`"
+        explanation: "This applies the render and changes the cluster."
+      - id: b
+        text: "`kubectl kustomize overlays/outpost`"
+        explanation: "Correct. It prints the rendered YAML and does not contact the API server. `kubectl diff -k` adds the comparison with the live objects."
+      - id: c
+        text: "`kubectl get -k overlays/outpost -o yaml` after an apply"
+        explanation: "This reads live objects after the change, which is too late for a review."
+      - id: d
+        text: "`kubectl apply -f overlays/outpost`"
+        explanation: "This ignores `kustomization.yaml` and applies the YAML files of the directory as they are."
+    correct_option: b
+    explanation: "A render is a function of its inputs and prints the final documents. The diff adds the comparison with the live cluster."
+
+  - id: ats077-010-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain what a controller reports in status and how to read it"
+    source_readings:
+      - sections/section-010/module-01/course-03-ownership-drift-and-field-managers.md
+    prompt: |-
+      A script waits until `status.readyReplicas` equals `spec.replicas` for a Deployment right after an apply that changed the pod template, and then reports success. The report is sometimes wrong. What does the script miss?
+    options:
+      - id: a
+        text: "It must also compare `metadata.generation` with `status.observedGeneration`, because the status can describe the older declaration until the controller has processed the new one."
+        explanation: "Correct. Equal generation numbers show that the status belongs to the latest `spec`."
+      - id: b
+        text: "It must read the status from etcd instead of the API server."
+        explanation: "The API server is the supported way to read the status."
+      - id: c
+        text: "It must delete the old ReplicaSet first."
+        explanation: "The Deployment controller manages old ReplicaSets during a rollout."
+      - id: d
+        text: "It must use `kubectl scale` to refresh the status."
+        explanation: "Scaling changes `spec` and does not refresh the status."
+    correct_option: a
+    explanation: "The controller copies the generation it processed to `status.observedGeneration`. Until it equals `metadata.generation`, the status describes older intent."
+
+  - id: ats077-010-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Resolve a field conflict with server-side apply"
+    source_readings:
+      - sections/section-010/module-01/course-03-ownership-drift-and-field-managers.md
+    prompt: |-
+      An autoscaler wrote `spec.replicas` of the `scout` Deployment. A pipeline now runs `kubectl apply --server-side --field-manager=pipeline -f scout.yaml` where the file sets `replicas: 2`, and the command fails with a conflict. What does the conflict tell the team?
+    options:
+      - id: a
+        text: "The YAML is invalid and must be fixed."
+        explanation: "A conflict is not a validation error. The document is valid."
+      - id: b
+        text: "Another manager owns `spec.replicas`, and the team must decide whether the file or the autoscaler owns the field. `--force-conflicts` takes it for the pipeline."
+        explanation: "Correct. Server-side apply makes the overwrite an explicit decision."
+      - id: c
+        text: "The Deployment was deleted by the autoscaler."
+        explanation: "A deleted object gives a not found error, not a field conflict."
+      - id: d
+        text: "The API server is out of memory."
+        explanation: "A conflict is a normal response about field ownership."
+    correct_option: b
+    explanation: "Field managers record which writer owns each field. The conflict makes the choice visible; leaving `replicas` out of the file is often the better answer when an autoscaler owns it."
+
+  - id: ats077-010-q07
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Assess whether a declaration expresses sufficient managed intent"
+    source_readings:
+      - sections/section-010/module-01/course-01-sufficient-intent-rendering-and-controller-contracts.md
+    prompt: |-
+      A Deployment manifest sets `nodeName: worker-2` for every pod, a fixed pod IP annotation and a fixed node port. `worker-2` fails. What does this show about the declaration?
+    options:
+      - id: a
+        text: "It is a good declaration, because it states everything."
+        explanation: "Stating everything removes choices the platform could make for the user."
+      - id: b
+        text: "It states details the platform should choose, so the controllers cannot move the pods. A declaration should state what the user needs and leave placement and addresses open."
+        explanation: "Correct. Sufficient intent is not maximal detail."
+      - id: c
+        text: "It is invalid, because `nodeName` is not a field of a pod."
+        explanation: "`nodeName` is a valid pod field. It is a poor choice in this case."
+      - id: d
+        text: "The scheduler ignores `nodeName` anyway."
+        explanation: "When `nodeName` is set, the scheduler is bypassed."
+    correct_option: b
+    explanation: "A declaration states the outcome the user cares about. Fixing placement removes the ability of the platform to repair the failure."
+
+  - id: ats077-010-q08
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Identify what a controller cannot infer from declarations"
+    source_readings:
+      - sections/section-010/module-01/course-03-ownership-drift-and-field-managers.md
+    prompt: |-
+      Someone deletes the top-level `scout` Deployment. Its ReplicaSet and pods disappear. No copy of the Deployment document exists outside the cluster. What can the cluster do?
+    options:
+      - id: a
+        text: "The ReplicaSet controller recreates the Deployment from the pod template."
+        explanation: "A ReplicaSet controller does not create its owner."
+      - id: b
+        text: "Nothing: no controller owns the Deployment, and a controller cannot infer a declaration that no object holds. Recreating it needs a stored copy, which is why documents live in version control."
+        explanation: "Correct. The top-level declaration is the source of intent."
+      - id: c
+        text: "The scheduler restores the Deployment from etcd history."
+        explanation: "The scheduler does not restore objects."
+      - id: d
+        text: "The kubelet restarts the pods from its local cache."
+        explanation: "The kubelet removes pods whose objects are deleted."
+    correct_option: b
+    explanation: "Controllers repair owned objects. The top-level declaration needs a copy outside the cluster."

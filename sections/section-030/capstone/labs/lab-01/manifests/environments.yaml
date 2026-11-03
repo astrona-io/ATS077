@@ -1,0 +1,101 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prod
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: dev
+data:
+  ENVIRONMENT: dev
+  DATABASE_HOST: db.dev.starfleet.internal
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: test
+data:
+  ENVIRONMENT: test
+  DATABASE_HOST: db.prod.starfleet.internal
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: prod
+data:
+  ENVIRONMENT: prod
+  DATABASE_HOST: db.prod.starfleet.internal
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-credentials
+  namespace: test
+type: Opaque
+stringData:
+  password: prod-only-value
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-credentials
+  namespace: prod
+type: Opaque
+stringData:
+  password: prod-only-value
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: drifter-team-edit
+  namespace: dev
+subjects:
+  - kind: Group
+    name: drifter-team
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: edit
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: drifter-team-edit
+  namespace: test
+subjects:
+  - kind: Group
+    name: drifter-team
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: edit
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: drifter-team-edit
+  namespace: prod
+subjects:
+  - kind: Group
+    name: drifter-team
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: edit
+  apiGroup: rbac.authorization.k8s.io

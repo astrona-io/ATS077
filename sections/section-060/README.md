@@ -5,9 +5,9 @@ exam_objectives:
 ---
 # Continuous Integration Fundamentals
 
-This section covers continuous Integration Fundamentals. It develops build And Release Pipelines through mechanisms, examples, prerequisites and failure reasoning.
+This section covers Continuous Integration Fundamentals. Its module, Build And Release Pipelines, has three parts: Source Changes And Build Evidence, Delivery, Deployment And Promotion Decisions, Pipeline Identities, Release Records And Rollback. Each part explains the mechanism and walks through commands you run yourself.
 
-Read the module goals, teaching and closing summary in order. YAML checks are indexed separately and appear after designated summaries. Larger domains can include intermediate checkpoints before the final review.
+Read the landing page, the three parts and the summary in order. The module has a playground for free exploration and a graded module lab, Pipeline Stages And Promotion Lab. The section ends with a graded capstone lab, Pipeline Fundamentals Capstone, and a quiz. The labs were built without being run and are marked untested.
 
 ## Learning Outcomes
 

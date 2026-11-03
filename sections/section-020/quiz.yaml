@@ -1,0 +1,204 @@
+# Knowledge check for section 020. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats077-020
+course_id: ATS077
+exam_code: CNPA
+status: draft
+provenance: Original practice material written for this course; not official exam questions.
+scope:
+  type: section
+  id: section-020
+  title: "DevOps Practices in Platform Engineering"
+questions:
+  - id: ats077-020-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain DevOps and DevSecOps as collaborative practices"
+    source_readings:
+      - sections/section-020/module-01/course-01-shared-ownership-feedback-and-platform-enablement.md
+    prompt: |-
+      A company creates a "DevOps team" that receives all deployment requests from the developers and runs them. Developers still cannot see production logs. Which statement describes the problem?
+    options:
+      - id: a
+        text: "Nothing is wrong, because a DevOps team is what the practice requires."
+        explanation: "DevOps is a set of working practices, not a team that takes over the work."
+      - id: b
+        text: "The work moved to another queue. Shared ownership needs the building team to see, change and answer for its service, which includes access to the logs."
+        explanation: "Correct. A team that cannot see or change its service owns only the blame."
+      - id: c
+        text: "The developers should write fewer tests."
+        explanation: "Testing is not the issue."
+      - id: d
+        text: "Production logs must never be visible to developers under any circumstances."
+        explanation: "Access can be scoped. The practice requires feedback to reach the owners."
+    correct_option: b
+    explanation: "DevOps shares responsibility across build and run. A new queue keeps the gap."
+
+  - id: ats077-020-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Distinguish platform enablement from transferring every responsibility"
+    source_readings:
+      - sections/section-020/module-01/course-01-shared-ownership-feedback-and-platform-enablement.md
+    prompt: |-
+      A platform team wants product teams to create their own namespaces. Which design is enablement?
+    options:
+      - id: a
+        text: "A form that creates a ticket, and a platform engineer creates the namespace within two days."
+        explanation: "This is a handover to a queue."
+      - id: b
+        text: "A supported template and a role that let a team create a namespace with the platform's quota and policy labels, without a ticket."
+        explanation: "Correct. The team does the work itself inside a boundary that the platform defines once."
+      - id: c
+        text: "Cluster-admin rights for every team lead."
+        explanation: "This removes the boundary and gives unneeded privileges."
+      - id: d
+        text: "A wiki page that tells teams to write their own scripts."
+        explanation: "Without a supported path, each team builds its own, in different ways."
+    correct_option: b
+    explanation: "Enablement is a supported self-service path with the guardrails built in."
+
+  - id: ats077-020-q03
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Reason about ownership information in cluster objects"
+    source_readings:
+      - sections/section-020/module-01/course-01-shared-ownership-feedback-and-platform-enablement.md
+    prompt: |-
+      An engineer adds `owner: bridge-team` to the metadata of the `probe` Deployment. An alert rule that selects pods with `owner=bridge-team` finds nothing. What is the cause?
+    options:
+      - id: a
+        text: "Labels on a Deployment are not copied to its pods. The label must be in `spec.template.metadata.labels`."
+        explanation: "Correct. Pods take their labels from the pod template."
+      - id: b
+        text: "Alert rules cannot select on labels."
+        explanation: "Selection by label is the normal mechanism."
+      - id: c
+        text: "The label key must start with `kubernetes.io/`."
+        explanation: "That prefix is reserved for Kubernetes components."
+      - id: d
+        text: "Labels apply only after the cluster restarts."
+        explanation: "Labels apply immediately where they are set."
+    correct_option: a
+    explanation: "The ReplicaSet creates pods from the pod template, so only labels in the template reach the pods."
+
+  - id: ats077-020-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Reason about feedback from probes"
+    source_readings:
+      - sections/section-020/module-01/course-02-feedback-signals-probes-and-rollouts.md
+    prompt: |-
+      A container needs 40 seconds to load data before it can answer requests, and it is healthy once it is running. During a rolling update the team wants no traffic to reach the new pod early, and no restart of a healthy container. Which setting fits?
+    options:
+      - id: a
+        text: "A liveness probe with a short period on a data endpoint."
+        explanation: "A liveness failure restarts the container, which would restart it during the load."
+      - id: b
+        text: "A readiness probe on an endpoint that answers only after the data is loaded."
+        explanation: "Correct. Readiness removes the pod from traffic without restarting it, and the rolling update waits for it."
+      - id: c
+        text: "No probe, because Kubernetes knows when the application is ready."
+        explanation: "Without a probe, a started container counts as ready."
+      - id: d
+        text: "A larger replica count."
+        explanation: "More replicas do not stop early traffic."
+    correct_option: b
+    explanation: "Readiness controls traffic and the pace of a rolling update. Liveness restarts."
+
+  - id: ats077-020-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain what a failed rollout does and does not do"
+    source_readings:
+      - sections/section-020/module-01/course-02-feedback-signals-probes-and-rollouts.md
+    prompt: |-
+      A Deployment with one replica is updated to an image tag that does not exist. Ten minutes later, what is the state?
+    options:
+      - id: a
+        text: "The Deployment controller has rolled back to the previous image."
+        explanation: "The controller reports the problem, but it does not roll back."
+      - id: b
+        text: "The old pod still serves, a new pod is in an image pull error and the Deployment has `Progressing=False` with reason `ProgressDeadlineExceeded`."
+        explanation: "Correct. The new pod never becomes ready, so the old one stays, and the controller reports the failed progress."
+      - id: c
+        text: "No pod runs, because the old pod was deleted first."
+        explanation: "The default rolling update keeps the old pod until a new one is available."
+      - id: d
+        text: "The kubelet has changed the image to the latest tag."
+        explanation: "The kubelet never changes the image."
+    correct_option: b
+    explanation: "The rolling update protects the service, and a person or a delivery tool must decide to undo."
+
+  - id: ats077-020-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Reason about security guardrails in the delivery path"
+    source_readings:
+      - sections/section-020/module-01/course-03-devsecops-guardrails-in-the-platform.md
+    prompt: |-
+      A namespace gets the label `pod-security.kubernetes.io/enforce=restricted`. It already runs a pod as root. What happens to that pod, and what happens when its Deployment is restarted?
+    options:
+      - id: a
+        text: "The running pod is evicted immediately, and the restart succeeds."
+        explanation: "PSA does not evict pods, and the restart would be judged."
+      - id: b
+        text: "The running pod keeps running. The restart creates pods that the API server rejects, and the reason appears in the events of the ReplicaSet."
+        explanation: "Correct. PSA judges pods at creation and update."
+      - id: c
+        text: "Nothing changes, because the label only applies to new namespaces."
+        explanation: "The label applies to new pods in the existing namespace."
+      - id: d
+        text: "The Deployment is deleted."
+        explanation: "PSA does not delete controllers."
+    correct_option: b
+    explanation: "Pod Security Admission runs at admission time and does not evict."
+
+  - id: ats077-020-q07
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Distinguish roles of the platform team and the product team in DevSecOps"
+    source_readings:
+      - sections/section-020/module-01/course-03-devsecops-guardrails-in-the-platform.md
+    prompt: |-
+      The platform team enforces the `restricted` standard in all team namespaces. A team's new Deployment is rejected. Who does what in a healthy DevSecOps setup?
+    options:
+      - id: a
+        text: "The platform team edits the team's manifest after a ticket."
+        explanation: "This puts the fix in a queue and splits ownership."
+      - id: b
+        text: "The team reads the specific violation message and changes its own manifest. The platform team owns the standard and its documentation."
+        explanation: "Correct. The check gives specific feedback to the owner of the workload."
+      - id: c
+        text: "The platform team removes the label so the pod starts."
+        explanation: "This removes the guardrail for everyone in the namespace."
+      - id: d
+        text: "The team runs the container as root in a different namespace."
+        explanation: "This avoids the guardrail instead of meeting it."
+    correct_option: b
+    explanation: "The platform builds the guardrail, and the owner of the workload fixes the workload."
+
+  - id: ats077-020-q08
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Reason about supported service boundaries and least privilege"
+    source_readings:
+      - sections/section-020/module-01/course-03-devsecops-guardrails-in-the-platform.md
+    prompt: |-
+      A team in namespace `outpost` must create and update Deployments there, and must not touch other namespaces. Which grant is correct?
+    options:
+      - id: a
+        text: "A `ClusterRoleBinding` to `cluster-admin` for the team group."
+        explanation: "This grants all rights in every namespace."
+      - id: b
+        text: "A `Role` in `outpost` with the verbs `get`, `list`, `watch`, `create`, `update` and `patch` on `deployments` in the `apps` group, and a `RoleBinding` in `outpost` to the group."
+        explanation: "Correct. A Role is valid in one namespace, and the binding names the group."
+      - id: c
+        text: "A `ClusterRole` that lists `deployments` with a `ClusterRoleBinding`."
+        explanation: "A `ClusterRoleBinding` gives the rules in every namespace."
+      - id: d
+        text: "A `Role` with `apiGroups: [\"\"]` and `resources: [\"deployments\"]`."
+        explanation: "Deployments are in the `apps` group, so this rule matches nothing."
+    correct_option: b
+    explanation: "Namespaced Role plus RoleBinding gives a boundary the team can work in alone."

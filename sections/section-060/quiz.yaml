@@ -1,0 +1,205 @@
+# Knowledge check for section 060. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats077-060
+course_id: ATS077
+exam_code: CNPA
+status: draft
+provenance: Original practice material written for this course; not official exam questions.
+scope:
+  type: section
+  id: section-060
+  title: "Continuous Integration Fundamentals"
+questions:
+  - id: ats077-060-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain what a failed check means for the pipeline"
+    source_readings:
+      - sections/section-060/module-01/course-01-source-changes-and-build-evidence.md
+    prompt: |-
+      A check Job exits with a non-zero status and reaches the `failed` condition. What should the pipeline do?
+    options:
+      - id: a
+        text: "Write the build record anyway and promote."
+        explanation: "This removes the protection of the check."
+      - id: b
+        text: "Retry until it passes, then promote."
+        explanation: "Retries hide a real failure."
+      - id: c
+        text: "Stop, write no build record and promote nothing."
+        explanation: "Correct. A failed stage stops the pipeline."
+      - id: d
+        text: "Delete the Job and continue."
+        explanation: "Deleting the evidence does not fix the failure."
+    correct_option: c
+    explanation: "A failed stage gives evidence and stops promotion."
+
+  - id: ats077-060-q02
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Relate release identity to an immutable artifact"
+    source_readings:
+      - sections/section-060/module-01/course-01-source-changes-and-build-evidence.md
+    prompt: |-
+      Why does a build record store the image digest and not only the version tag?
+    options:
+      - id: a
+        text: "A digest is shorter."
+        explanation: "Length is not the reason."
+      - id: b
+        text: "A tag can later point at a different image, and a digest identifies the exact bytes."
+        explanation: "Correct. A digest does not move."
+      - id: c
+        text: "Kubernetes cannot pull a tag."
+        explanation: "It can."
+      - id: d
+        text: "A digest makes the build faster."
+        explanation: "It does not change build speed."
+    correct_option: b
+    explanation: "A digest identifies the bytes."
+
+  - id: ats077-060-q03
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain why build inputs need control"
+    source_readings:
+      - sections/section-060/module-01/course-01-source-changes-and-build-evidence.md
+    prompt: |-
+      Revision A passes its tests. The pipeline later rebuilds revision A and a dependency has changed. What is the risk?
+    options:
+      - id: a
+        text: "The new artifact can differ, so the test evidence no longer describes the deployed bytes."
+        explanation: "Correct. Build and promote one artifact, and control the inputs."
+      - id: b
+        text: "The source revision changes."
+        explanation: "The revision is unchanged."
+      - id: c
+        text: "The tests pass automatically."
+        explanation: "Nothing guarantees that."
+      - id: d
+        text: "The registry deletes the old artifact."
+        explanation: "This is not implied."
+    correct_option: a
+    explanation: "Source identity alone does not identify the artifact."
+
+  - id: ats077-060-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Reason about promotion of one artifact"
+    source_readings:
+      - sections/section-060/module-01/course-02-delivery-deployment-and-promotion-decisions.md
+    prompt: |-
+      Staging and production run the same image and differ in `app-config`. Production misbehaves and staging does not. What does this narrow down?
+    options:
+      - id: a
+        text: "The compiler version."
+        explanation: "The artifact is the same."
+      - id: b
+        text: "The source code."
+        explanation: "The artifact is the same."
+      - id: c
+        text: "The registry."
+        explanation: "The artifact is the same."
+      - id: d
+        text: "The configuration or the environment, because the artifact is identical."
+        explanation: "Correct. Promoting one artifact makes the difference visible."
+    correct_option: d
+    explanation: "The comparison of artifact and configuration shows what differs."
+
+  - id: ats077-060-q05
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Distinguish continuous delivery from continuous deployment"
+    source_readings:
+      - sections/section-060/module-01/course-02-delivery-deployment-and-promotion-decisions.md
+    prompt: |-
+      A pipeline runs checks, deploys to staging automatically and then waits for an approval before production. Which practice is this?
+    options:
+      - id: a
+        text: "Continuous integration only."
+        explanation: "It also covers delivery."
+      - id: b
+        text: "Continuous delivery, because the production decision is a controlled gate."
+        explanation: "Correct. The change is always releasable and waits for a decision."
+      - id: c
+        text: "Continuous deployment, because staging is automatic."
+        explanation: "Deployment to production is the deciding point."
+      - id: d
+        text: "Neither, because a person is involved."
+        explanation: "A manual gate is valid in delivery."
+    correct_option: b
+    explanation: "The production decision separates them."
+
+  - id: ats077-060-q06
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Treat configuration changes as releases"
+    source_readings:
+      - sections/section-060/module-01/course-02-delivery-deployment-and-promotion-decisions.md
+    prompt: |-
+      The ConfigMap `app-config` changes in production. The Deployment is unchanged. What happens to running pods that read it through `envFrom`?
+    options:
+      - id: a
+        text: "They update their environment immediately."
+        explanation: "Environment variables are read at start."
+      - id: b
+        text: "They are deleted at once."
+        explanation: "Nothing deletes them."
+      - id: c
+        text: "They keep the old value until they restart, so the release record must say when the change took effect."
+        explanation: "Correct. The object changed and the running behavior did not."
+      - id: d
+        text: "The image tag changes."
+        explanation: "The image is not affected."
+    correct_option: c
+    explanation: "A configuration change needs a record."
+
+  - id: ats077-060-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Give pipeline stages narrow identities"
+    source_readings:
+      - sections/section-060/module-01/course-03-pipeline-identities-release-records-and-rollback.md
+    prompt: |-
+      Which setup follows least privilege for a pipeline that deploys to production?
+    options:
+      - id: a
+        text: "One ServiceAccount with cluster-admin for every stage."
+        explanation: "A single leak reaches everything."
+      - id: b
+        text: "A ServiceAccount with a Role that allows patching Deployments only in `production`."
+        explanation: "Correct. The rights match the stage and the namespace."
+      - id: c
+        text: "A ServiceAccount that can read all Secrets, to be safe."
+        explanation: "Secrets are not needed."
+      - id: d
+        text: "The build account also deploys."
+        explanation: "This joins two trust boundaries."
+    correct_option: b
+    explanation: "Use a Role in one namespace."
+
+  - id: ats077-060-q08
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Explain what a rollback does and does not undo"
+    source_readings:
+      - sections/section-060/module-01/course-03-pipeline-identities-release-records-and-rollback.md
+    prompt: |-
+      A team rolls production back with `kubectl rollout undo --to-revision=1`. What should it do afterwards?
+    options:
+      - id: a
+        text: "Nothing, the record still matches."
+        explanation: "The rollback creates a new revision number."
+      - id: b
+        text: "Update the release record, and check data and external effects that the image rollback does not reverse."
+        explanation: "Correct. A rollback restores the pod template and nothing else."
+      - id: c
+        text: "Delete the history."
+        explanation: "The history is evidence."
+      - id: d
+        text: "Rebuild the image."
+        explanation: "The old artifact is reused."
+    correct_option: b
+    explanation: "A rollback restores the pod template under a new revision number."
+

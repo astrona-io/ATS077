@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Quota, Defaults And Parity Lab (LAB). Graded against the live
+# cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-077-lab-030-01
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - ghcr.io/stefanprodan/podinfo:6.15.0
+      - mccutchen/go-httpbin:2.25.0
+      - curlimages/curl:8.22.0
+
+# Starting state: the Starfleet workloads plus the namespaces dev, test and prod with one app-config ConfigMap each. test has no DATABASE_HOST and prod logs at debug.
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: Create the starting state
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the cluster settled after the solution
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: dev-limits
+      description: dev has the ResourceQuota dev-quota and the LimitRange dev-defaults with the required values
+      type: file
+      source: validation/validate-dev-limits.sh
+      hint: The quota needs pods 4, requests.memory 256Mi and limits.memory 512Mi. The LimitRange needs a Container default memory of 64Mi and a defaultRequest memory of 16Mi.
+    - name: dev-workload
+      description: crew runs two available replicas in dev, declares no resources itself and its pods carry the defaults
+      type: file
+      source: validation/validate-dev-workload.sh
+      hint: Create the Deployment crew in dev with the podinfo image and two replicas, and do not write resources in it. The LimitRange supplies them.
+    - name: config-parity
+      description: The three app-config ConfigMaps have the same keys, own values and no copied production host
+      type: file
+      source: validation/validate-config-parity.sh
+      hint: test misses DATABASE_HOST. Give it its own host, and set LOG_LEVEL in prod to warn. Do not copy the production host into test.
+    - name: workloads-running
+      description: scout and shuttle are still available with their original images
+      type: file
+      source: validation/validate-workloads-running.sh
+      hint: Do not delete, scale down or replace the Deployments.
+
+teardown:
+  keepCluster: false

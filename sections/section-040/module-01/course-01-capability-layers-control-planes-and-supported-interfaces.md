@@ -3,29 +3,100 @@ draft: true
 exam_objectives:
 - Platform Architecture and Capabilities
 ---
-# Capability Layers, Control Planes And Supported Interfaces
+# Capability Layers And Supported Interfaces
 
-A platform architecture connects user-facing capability contracts to the systems that implement them. Developers can request deployment, databases, identities or observation through a portal, API or command interface. Behind those interfaces, controllers, workflow systems and providers perform the actual work. The platform's value comes from a coherent supported experience, not from replacing every underlying implementation.
+A platform offers capabilities, such as running a workload, reaching it over the network or storing data. A developer asks for a capability through an interface, and other components do the work behind it. Keeping these three things apart makes the platform easy to use and safe to change: the capability is what the user needs, the interface is how the user asks, and the implementation is what actually happens. This part uses Kubernetes itself as the example, because it is built in exactly these layers.
 
-Capability boundaries describe what users can request and what outcomes they can observe. A database capability might accept a service class and retention choice, then expose connection information and readiness. The user should not need to understand every provider API call. The contract still needs enough detail to explain supported choices, ownership and failure conditions.
+## Three layers
 
-Control planes interpret intent and coordinate implementation. A Kubernetes operator, infrastructure controller or workflow engine can participate in that layer. Providers create the underlying resources. These layers can have different timing and failure behavior. An API accepting a request does not mean the external database is already usable, so status must preserve the transition from accepted to pending, ready or failed.
+A useful picture of a platform has three layers:
 
-Consider a self-service service template. The portal collects inputs and submits an approved workflow. The workflow creates source artifacts and requests infrastructure through APIs. Reconciliation then maintains the declared environment. If provisioning is denied, the portal should show the relevant condition rather than claim success because its form submission completed. The user sees one task, but several contracts contribute to the result.
+- The developer interface is the set of objects and commands a user works with, for example a Deployment, a Service and `kubectl`.
+- The control plane is the set of components that read those requests and make them true. They store the desired state, decide where work runs and keep reconciling.
+- The infrastructure is what runs the work: nodes, the container runtime, the network and the storage.
 
-Shared capabilities need explicit ownership. The platform team can own the interface and supported integration while another internal team or managed provider operates the underlying service. This division should be visible in incident and support paths. Without it, each team can assume the other owns the failure and users remain blocked.
+A request travels from the top to the bottom, and status travels back up. The user does not need to know which node runs a pod or how the network delivers a packet. The platform team does need to know, because it owns the layers below the interface.
 
-Composability lets applications consume capabilities independently where practical. A team may use the platform's deployment path while keeping a specialized data service outside it under an approved contract. Forcing every workload into one oversized template can make adoption harder and create unnecessary coupling. Supported extension and exception paths can preserve governance without making the platform an obstacle to every uncommon need.
+```mermaid
+flowchart TB
+    U["developer interface: Deployment, Service, kubectl"] -->|"desired state"| C["control plane: API server, controllers, scheduler"]
+    C -->|"actions"| I["infrastructure: nodes, runtime, network"]
+    I -->|"status"| C
+    C -->|"conditions and events"| U
+```
 
-Failure domains deserve review. A central control service can simplify operation while concentrating dependency and access. Separate controllers can isolate some failures while increasing coordination work. The architecture should identify which capabilities become unavailable when a component fails and whether already running applications continue. Control-plane availability and application runtime availability are related but not identical.
+## See the interface
 
-Interfaces need lifecycle and version policy. A field rename in a platform API can break automation even when the underlying provider remains healthy. Defaults should be stable or changed through a deliberate migration. The platform should avoid exposing provider-specific implementation details as permanent public contracts unless it intends to support them over time.
+Every kind of object that the API server serves is part of the interface. List the kinds in the `apps` group and read the documentation of one field, which the API server itself provides:
 
-Observability belongs across the layers. Useful evidence connects a user request to its declared object, controller result and provider outcome. Error messages should identify the failing boundary and protect confidential values. A portal dashboard with only one green availability icon cannot explain whether provisioning, policy or deployment is blocked.
+<!-- astrona:playground:renew -->
 
-Architecture review should therefore ask what users can request, who implements it, which identity acts and what outcome proves completion. That reasoning supports a platform that is both simpler to consume and honest about its dependencies. Students can use the same questions to assess unfamiliar platform products and internal designs.
+```sh
+kubectl api-resources --api-group=apps
+kubectl explain deployment.spec.replicas
+```
+
+The first command prints a table with the names `daemonsets`, `deployments`, `replicasets` and `statefulsets`, their short names and the value `true` in the `NAMESPACED` column. The second prints the field name, its type `integer` and a description. The interface describes itself, so a user can discover what to ask for without reading the platform's source code.
+
+## See the control plane
+
+In the kind cluster the control plane components run as pods in the namespace `kube-system`. List them:
+
+```sh
+kubectl -n kube-system get pods
+```
+
+The list contains a pod for `etcd`, `kube-apiserver`, `kube-controller-manager` and `kube-scheduler`, with the node name appended, and pods for `coredns` and `kube-proxy`. The API server is the only component that talks to etcd, and every other component talks to the API server. The scheduler picks a node for a pod that has none, and the controller manager runs the controllers, such as the Deployment controller. Ask the API server whether it is ready, with the detail of each check:
+
+```sh
+kubectl get --raw '/readyz?verbose' | tail -n 5
+```
+
+The output has one line per check, in the form `[+]` followed by a name for a passing check, and the last line is `readyz check passed`. The control plane reports its own health through the same API that users call.
+
+## See the infrastructure
+
+The infrastructure layer is the node and what runs on it. Look at it and at the place where one pod runs:
+
+```sh
+kubectl get nodes -o wide
+kubectl -n starfleet get pods -l app=scout -o wide
+```
+
+The first command prints the single node with its status `Ready`, the Kubernetes version `v1.35.8` and the container runtime. The second prints the `scout` pod with its IP address and the node it is on. A user wrote a Deployment and never chose the node. The scheduler chose it, and the kubelet on that node started the container.
+
+## The interface stays when the implementation changes
+
+A supported interface is a promise that the same request keeps its meaning when the implementation changes. A Service is an example. The user asks for a stable name and a port for a set of pods. The implementation keeps the list of pod addresses in EndpointSlices and programs the node's network rules with `kube-proxy`, and a different network plugin can replace that part. Look at the part below the interface:
+
+```sh
+kubectl -n starfleet get service scout
+kubectl -n starfleet get endpointslices -l kubernetes.io/service-name=scout
+```
+
+The first command prints the Service with a cluster IP and port `80`. The second prints an EndpointSlice that lists the address of the `scout` pod. Scale `scout` to two replicas and read the slice again:
+
+```sh
+kubectl -n starfleet scale deployment/scout --replicas=2
+kubectl -n starfleet rollout status deployment/scout
+kubectl -n starfleet get endpointslices -l kubernetes.io/service-name=scout -o jsonpath='{.items[0].endpoints[*].addresses}{"\n"}'
+```
+
+The scale command prints `deployment.apps/scout scaled`. The last command prints two addresses. The user did not change the Service. A controller updated the EndpointSlice, and the Service kept its name and port. Return to one replica with `kubectl -n starfleet scale deployment/scout --replicas=1`.
+
+## Composability and ownership
+
+Each layer should be replaceable on its own, and each should have one owner. The user owns the request. The platform team owns the interface, and the controllers and infrastructure behind it. When ownership is not clear, a failure falls between teams: the user blames the platform, and the platform blames the request. A good interface reports the cause in its status, so the person who can act on it sees it.
+
+A platform is also a set of capabilities that combine. A workload capability, a network capability and an identity capability work together because each has a defined interface. A platform that exposes every internal detail to users forces them to combine the details by themselves, and a change of any detail then breaks them.
+
+## What you know now
+
+A platform separates the capability, the interface and the implementation into layers. In Kubernetes, the objects are the interface, the API server and controllers are the control plane, and the nodes and runtime are the infrastructure. The same request keeps its meaning when the implementation below it changes, which is what makes an interface supported. Status flows back up through conditions and events, so the owner of each layer can be found.
 
 ## Common pitfalls
 
 > [!WARNING]
-> A portal is an interface, not the whole implementation. Accepted requests are not necessarily ready capabilities. Define ownership, API lifecycle and failure domains so abstraction reduces complexity without concealing actionable status.
+> Pods in `kube-system` are the cluster's own components. Do not delete or edit them while exploring.
+> An interface that exposes implementation details cannot change its implementation without breaking its users.
+> A healthy object at the top does not prove that every layer below is healthy. Read status and events at each layer.

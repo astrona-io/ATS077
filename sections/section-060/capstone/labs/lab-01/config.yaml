@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Pipeline Fundamentals Capstone (LAB, capstone). Graded against the live
+# cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-077-capstone-060
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - ghcr.io/stefanprodan/podinfo:6.15.0
+      - mccutchen/go-httpbin:2.25.0
+      - curlimages/curl:8.22.0
+
+# Starting state: the Starfleet workloads and the namespaces ci, staging and production; scout runs in staging and production as release r1 and the ConfigMap source in ci holds revision r2
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: Create the starting state
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the cluster settled after the solution
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: pipeline-identities
+      description: ci-build, deploy-staging and deploy-production exist in ci with narrow, separate rights
+      type: file
+      source: validation/validate-pipeline-identities.sh
+      hint: One ServiceAccount per stage in ci. The build account works with ConfigMaps and Jobs in ci only. Each deploy account may get, list, patch and update Deployments in its own namespace only. Nobody may read Secrets or delete Deployments.
+    - name: release-promotion
+      description: Release r2 reached staging and production as the same image, and production records the change cause
+      type: file
+      source: validation/validate-release-promotion.sh
+      hint: Set the pod template label release=r2 in staging and in production, and in the same patch set the annotation kubernetes.io/change-cause to "release r2" on the production Deployment. Do not change the image.
+    - name: release-record
+      description: The ConfigMap release-record in ci matches the cluster, including the revision to return to
+      type: file
+      source: validation/validate-release-record.sh
+      hint: Keys revision, image, deployed-revision and previous-revision. Read the production revision from the annotation deployment.kubernetes.io/revision.
+    - name: workloads-running
+      description: scout, probe and shuttle are still available with their original images
+      type: file
+      source: validation/validate-workloads-running.sh
+      hint: Do not delete, scale down or replace the starfleet Deployments.
+
+teardown:
+  keepCluster: false

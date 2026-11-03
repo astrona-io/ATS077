@@ -5,7 +5,7 @@ exam_objectives:
 ---
 # Helm, Kustomize And Configuration Rendering
 
-The `scout` application needs similar Kubernetes resources in development and production, with different replica counts. Configuration tools reduce repeated manual editing, but they use different methods. The rendered resources are still subject to API validation and normal controller behavior.
+The `scout` application needs similar Kubernetes resources in `staging` and `production`, with different replica counts and image tags. Configuration tools reduce repeated manual editing, but they use different methods. The rendered resources are still subject to API validation and normal controller behavior.
 
 Helm packages related resources in a chart. Templates and values produce Kubernetes manifests, and Helm tracks releases for installation and updates. A chart can express many configuration choices, but template complexity can hide the actual resource changes if reviewers only inspect a values file.
 
@@ -15,25 +15,78 @@ Rendering is the transformation from tool inputs to the final resource declarati
 
 Neither tool automatically supplies continuous reconciliation. A GitOps controller may render Helm or Kustomize inputs and then reconcile the result, but the packaging or customization tool alone is a different part of the workflow. Likewise, neither output guarantees application readiness.
 
-Choose Helm when a parameterized package and release workflow suit the use case. Choose Kustomize when resource composition and environment overlays fit better. Decide from maintainability and review needs rather than assuming every deployment requires both. Whatever the tool, the final manifest should express the intended state clearly enough to inspect.
+## The environment
 
-## Reviewing Rendered Resources
+The playground repository `starfleet/scout-deploy` uses Kustomize. It has a `base` directory and two overlays, `staging` and `production`. A Gitea server in the cluster hosts it, and Argo CD renders the same overlays when it syncs.
 
-Suppose a Helm value changes the application image and replica count. A chart template uses those values to produce a Deployment. The rendered result can also contain labels, selectors, mounts and permissions defined elsewhere in the chart. Reviewing only the two changed values can miss an unintended interaction in the generated resources.
+<!-- astrona:playground:renew -->
 
-With Kustomize, a production overlay can change replicas and image identity over a shared base. Patches need to target the intended object and field. A base change can affect every overlay, while an overlay patch can become incompatible with a changed base structure. Composition reduces duplication but does not remove review of the final configuration.
+Reach the Git server through a port-forward and clone the repository. Run the port-forward in the background:
 
-Names and namespaces must remain consistent across references. A customized Secret name, Service selector or claim reference needs a corresponding consumer relationship. A generated set can be individually valid while containing references that do not resolve to the intended objects. Rendering validation and runtime behavior answer different questions.
+```sh
+kubectl -n gitea port-forward svc/gitea-http 3000:3000 >/dev/null 2>&1 &
+sleep 3
+git clone http://platform:starfleet-gitops@127.0.0.1:3000/starfleet/scout-deploy.git
+cd scout-deploy
+ls base overlays
+```
 
-## Choosing A Configuration Abstraction
+The listing shows the base files `deployment.yaml`, `kustomization.yaml` and `service.yaml`, plus the directories `overlays/production` and `overlays/staging`.
 
-A chart is useful for packaging a reusable application with defined parameter choices and release tracking. An overlay is useful for modifying concrete resource files across environments. Either can become difficult to maintain if it accumulates too many conditionals, patches or unexplained environment exceptions.
+## Read the inputs
 
-Prefer an abstraction whose inputs and outputs reviewers can understand. A small repeated setting may be clearer as an explicit overlay than a large general template. A reusable application with several related resources may benefit from a chart's packaging contract. The tools can be combined when needed, but that adds another transformation to inspect.
+The base holds the shared resources. An overlay points at the base and changes selected fields:
 
-The delivery controller, if present, consumes these outputs and reconciles them. Helm rendering, Kustomize composition, API acceptance and application readiness remain distinct stages. A useful configuration lesson follows a specific input through its rendered field and resulting behavior rather than assuming the chosen tool makes correctness automatic.
+```sh
+cat base/kustomization.yaml
+cat overlays/staging/kustomization.yaml
+cat overlays/production/kustomization.yaml
+```
+
+The base lists its resources. Each overlay sets a namespace, an image tag and a replica count. The staging overlay uses tag `6.15.0` and one replica. The production overlay uses tag `6.14.0` and two replicas. Production is one version behind on purpose.
+
+## Render the outputs
+
+Kustomize is built into `kubectl`. Rendering writes the final resources to the screen and changes nothing in the cluster:
+
+```sh
+kubectl kustomize overlays/staging
+```
+
+The output shows a Service and a Deployment with `namespace: staging`, `replicas: 1` and the image `ghcr.io/stefanprodan/podinfo:6.15.0`. Read the selector and the pod labels next to each other. They must match, or the Deployment would be rejected or would own no pods.
+
+## Diff two environments
+
+A diff of the two rendered outputs shows what truly differs:
+
+```sh
+diff <(kubectl kustomize overlays/staging) <(kubectl kustomize overlays/production)
+```
+
+The diff lists lines for the namespace, the replica count, the image tag and the message value. Everything else is shared. A reviewer can read a few lines instead of two full manifests, and that is the gain of rendering before approving.
+
+## Helm in the same workflow
+
+Helm produces the same kind of output from a chart and a values file, and the command is `helm template <release> <chart> -f values.yaml`. This playground does not install Helm, so the rest of this part stays with Kustomize. The review habit is identical. Render first, read the Deployment that comes out, and confirm names, namespaces and images, not only the changed value. Argo CD can render a chart or an overlay itself, so the controller consumes either and reconciles the output.
+
+## Choosing and reviewing
+
+Choose Helm when a parameterized package and release workflow suit the use case. Choose Kustomize when resource composition and environment overlays fit better. Decide from maintainability and review needs rather than assuming every deployment requires both. A base change affects every overlay, and an overlay patch can break when the base structure changes, so composition reduces duplication but does not remove review. Names and namespaces must stay consistent across references, because a generated set can be valid while containing a reference that points at nothing.
+
+Stop the port-forward when you finish:
+
+```sh
+cd ..
+kill %1
+```
+
+## What you know now
+
+Kustomize builds a base plus an overlay into final resources, and `kubectl kustomize` shows them without applying. A diff between environments shows the real differences. Helm and Kustomize produce configuration, and the controller reconciles it.
 
 ## Common pitfalls
 
 > [!WARNING]
-> Helm and Kustomize produce configuration; neither inherently provides continuous GitOps reconciliation. Review rendered resources, not just the inputs used to generate them.
+> Helm and Kustomize produce configuration. Neither provides continuous GitOps reconciliation.
+> Review rendered resources, not only the inputs that generate them.
+> A base change affects every overlay. Render each overlay after editing the base.

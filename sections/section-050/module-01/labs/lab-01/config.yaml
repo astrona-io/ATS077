@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Golden Path Base For Two Teams (LAB). Graded against the live
+# cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-077-lab-050-01
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - ghcr.io/stefanprodan/podinfo:6.15.0
+      - mccutchen/go-httpbin:2.25.0
+      - curlimages/curl:8.22.0
+
+# Starting state: the Starfleet workloads and two team namespaces, bridge and engine, with the restricted Pod Security Standard enforced
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: Create the starting state
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the cluster settled after the solution
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: golden-defaults
+      description: web in bridge and in engine carries the golden path settings (probe, resources, restricted security context, path label)
+      type: file
+      source: validation/validate-golden-defaults.sh
+      hint: Put the probe, requests, memory limit, runAsNonRoot, numeric runAsUser 1000, seccomp RuntimeDefault, allowPrivilegeEscalation false, drop ALL and the label platform.starfleet.io/path=golden in the base, on the Deployment and on its pod template.
+    - name: team-overlays
+      description: bridge runs 2 replicas and engine runs 1, each with its own team label, and each has a Service named web
+      type: file
+      source: validation/validate-team-overlays.sh
+      hint: Each overlay sets namespace, replicas where it differs from the default, and a labels pair team with includeTemplates true.
+    - name: services-ready
+      description: The Service web in each namespace has ready endpoints for every replica
+      type: file
+      source: validation/validate-services-ready.sh
+      hint: The pods must pass their readiness probe. Check kubectl get endpointslices -n bridge.
+    - name: workloads-running
+      description: scout, probe and shuttle are still available with their original images
+      type: file
+      source: validation/validate-workloads-running.sh
+      hint: Do not delete, scale down or replace the starfleet Deployments.
+
+teardown:
+  keepCluster: false

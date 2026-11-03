@@ -5,9 +5,9 @@ exam_objectives:
 ---
 # Platform Engineering Goals, Objectives, and Approaches
 
-This section covers platform Engineering Goals, Objectives, and Approaches. It develops user Needs, Golden Paths And Incremental Platform Adoption through mechanisms, examples, prerequisites and failure reasoning.
+This section covers Platform Engineering Goals, Objectives, and Approaches. Its module, User Needs, Golden Paths And Incremental Platform Adoption, has three parts: User Needs And Platform Goals, Golden Paths With A Kustomize Base, Adoption, Feedback And Exceptions. Each part explains the mechanism and walks through commands you run yourself.
 
-Read the module goals, teaching and closing summary in order. YAML checks are indexed separately and appear after designated summaries. Larger domains can include intermediate checkpoints before the final review.
+Read the landing page, the three parts and the summary in order. The module has a playground for free exploration and a graded module lab, Golden Path Base For Two Teams Lab. The section ends with a graded capstone lab, Platform Goals Capstone, and a quiz. The labs were built without being run and are marked untested.
 
 ## Learning Outcomes
 

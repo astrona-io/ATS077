@@ -1,0 +1,51 @@
+# Three environment namespaces with one ConfigMap each. Same keys, values per environment.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev
+  labels:
+    environment: dev
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test
+  labels:
+    environment: test
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prod
+  labels:
+    environment: prod
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: dev
+data:
+  ENVIRONMENT: dev
+  LOG_LEVEL: debug
+  DATABASE_HOST: db.dev.starfleet.internal
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: test
+data:
+  ENVIRONMENT: test
+  LOG_LEVEL: info
+  DATABASE_HOST: db.test.starfleet.internal
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: prod
+data:
+  ENVIRONMENT: prod
+  LOG_LEVEL: warn
+  DATABASE_HOST: db.prod.starfleet.internal

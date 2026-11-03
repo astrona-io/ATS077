@@ -5,9 +5,9 @@ exam_objectives:
 ---
 # Declarative Resource Management
 
-This section covers declarative Resource Management. It develops sufficient Intent, Rendering And Controller Contracts through mechanisms, examples, prerequisites and failure reasoning.
+This section covers Declarative Resource Management. Its module, Sufficient Intent, Rendering And Controller Contracts, has three parts: Desired State, The API Server And Controllers, Rendering Declarations With Kustomize, Ownership, Drift And Field Managers. Each part explains the mechanism and walks through commands you run yourself.
 
-Read the module goals, teaching and closing summary in order. YAML checks are indexed separately and appear after designated summaries. Larger domains can include intermediate checkpoints before the final review.
+Read the landing page, the three parts and the summary in order. The module has a playground for free exploration and a graded module lab, Declare, Render And Apply Under A Field Manager Lab. The section ends with a graded capstone lab, Declarative Resource Management Capstone, and a quiz. The labs were built without being run and are marked untested.
 
 ## Learning Outcomes
 

@@ -1,0 +1,56 @@
+# The declaration of shuttle, kept outside the Deployment object, and a bare pod.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: desired-state
+  namespace: starfleet
+data:
+  shuttle.yaml: |
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: shuttle
+      namespace: starfleet
+      labels:
+        app: shuttle
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: shuttle
+      template:
+        metadata:
+          labels:
+            app: shuttle
+        spec:
+          serviceAccountName: shuttle
+          containers:
+            - name: shuttle
+              image: curlimages/curl:8.22.0
+              command: ["sh", "-c", "while true; do sleep 30; done"]
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 16Mi
+                limits:
+                  memory: 32Mi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: drifter-debug
+  namespace: outpost
+  labels:
+    app: drifter-debug
+spec:
+  serviceAccountName: drifter
+  containers:
+    - name: drifter-debug
+      image: curlimages/curl:8.22.0
+      command: ["sh", "-c", "while true; do sleep 30; done"]
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+        limits:
+          memory: 32Mi

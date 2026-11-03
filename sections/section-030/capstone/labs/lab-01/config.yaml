@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Environment Boundaries Capstone (LAB, capstone). Graded against the live
+# cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-077-capstone-030
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - ghcr.io/stefanprodan/podinfo:6.15.0
+      - mccutchen/go-httpbin:2.25.0
+      - curlimages/curl:8.22.0
+
+# Starting state: the Starfleet workloads plus dev, test and prod. test was seeded with the production database host and the production password, and drifter-team has the edit role in all three environments.
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: Create the starting state
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the cluster settled after the solution
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: environment-guardrails
+      description: Each namespace carries its environment label, prod enforces restricted and test has the quota test-quota
+      type: file
+      source: validation/validate-environment-guardrails.sh
+      hint: Label dev, test and prod with environment=<name>, enforce the restricted Pod Security Standard on prod only, and create a ResourceQuota test-quota with at most 5 pods in test.
+    - name: environment-access
+      description: drifter-team can deploy in dev and test, and can only read workloads in prod
+      type: file
+      source: validation/validate-environment-access.sh
+      hint: prod has a RoleBinding to the edit ClusterRole for drifter-team. Replace it with a binding to the view ClusterRole. Leave dev and test as they are.
+    - name: data-separation
+      description: test uses its own database host and its own db-credentials password, and prod is unchanged
+      type: file
+      source: validation/validate-data-separation.sh
+      hint: test was seeded with the production DATABASE_HOST and the production password. Give test its own values and do not change anything in prod.
+    - name: workloads-running
+      description: scout and shuttle are still available with their original images
+      type: file
+      source: validation/validate-workloads-running.sh
+      hint: Do not delete, scale down or replace the Deployments.
+
+teardown:
+  keepCluster: false

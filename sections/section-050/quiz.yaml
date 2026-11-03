@@ -1,0 +1,205 @@
+# Knowledge check for section 050. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats077-050
+course_id: ATS077
+exam_code: CNPA
+status: draft
+provenance: Original practice material written for this course; not official exam questions.
+scope:
+  type: section
+  id: section-050
+  title: "Platform Engineering Goals, Objectives, and Approaches"
+questions:
+  - id: ats077-050-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Express platform goals as user outcomes"
+    source_readings:
+      - sections/section-050/module-01/course-01-user-needs-golden-paths-and-incremental-platform-adoption.md
+    prompt: |-
+      Which statement is a platform goal and not an output?
+    options:
+      - id: a
+        text: "We published a template for deployments."
+        explanation: "A published template is an output."
+      - id: b
+        text: "New services reach a running state with a probe and limits without a ticket."
+        explanation: "Correct. It names a user, a task and a change, and can be checked against a baseline."
+      - id: c
+        text: "We installed a new deployment tool."
+        explanation: "Installing a tool is an activity."
+      - id: d
+        text: "The platform team has a backlog of ten items."
+        explanation: "A backlog says nothing about user value."
+    correct_option: b
+    explanation: "A goal names the user, the task and the change."
+
+  - id: ats077-050-q02
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Use evidence and a baseline to decide what to build"
+    source_readings:
+      - sections/section-050/module-01/course-01-user-needs-golden-paths-and-incremental-platform-adoption.md
+    prompt: |-
+      A report shows three of four Deployments have no readiness probe. What should the platform team do first?
+    options:
+      - id: a
+        text: "Add a probe to every Deployment without asking."
+        explanation: "The owner knows which endpoint is right."
+      - id: b
+        text: "Build a template immediately."
+        explanation: "The cause is not known yet."
+      - id: c
+        text: "Treat the count as proof that teams are careless."
+        explanation: "The count is a symptom and does not show the cause."
+      - id: d
+        text: "Ask the teams why the probe is missing, and keep the count as a baseline."
+        explanation: "Correct. The count is evidence and a baseline, and the conversation explains the cause."
+    correct_option: d
+    explanation: "A count is a symptom, not a diagnosis."
+
+  - id: ats077-050-q03
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Separate shared defaults from team choices"
+    source_readings:
+      - sections/section-050/module-01/course-02-golden-paths-with-a-kustomize-base.md
+    prompt: |-
+      Why does a golden path base leave the namespace and the replica count to the overlay?
+    options:
+      - id: a
+        text: "Those values are choices of the team, and the shared base should not force them."
+        explanation: "Correct. The base holds what is the same for every service."
+      - id: b
+        text: "Kustomize cannot set a namespace in a base."
+        explanation: "It can, but forcing it blocks other teams."
+      - id: c
+        text: "Replicas cannot be set in a Deployment."
+        explanation: "They can, and the base states a default."
+      - id: d
+        text: "The namespace is a secret."
+        explanation: "It is not a secret."
+    correct_option: a
+    explanation: "The contract of the path is the line between the two."
+
+  - id: ats077-050-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Apply labels with Kustomize"
+    source_readings:
+      - sections/section-050/module-01/course-02-golden-paths-with-a-kustomize-base.md
+    prompt: |-
+      An overlay uses `labels` with `pairs` `team: bridge` and `includeTemplates: true`. What is the effect on the Deployment?
+    options:
+      - id: a
+        text: "Only the Service gets the label."
+        explanation: "The Deployment gets it as well."
+      - id: b
+        text: "The selector of the Deployment changes to include the label."
+        explanation: "Selectors change only with includeSelectors."
+      - id: c
+        text: "The label is on the Deployment and in its pod template, so pods carry it."
+        explanation: "Correct. includeTemplates writes the label into the pod template."
+      - id: d
+        text: "The label replaces every existing label."
+        explanation: "The pair is added."
+    correct_option: c
+    explanation: "includeTemplates reaches the pod template."
+
+  - id: ats077-050-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain how the path and a namespace guardrail work together"
+    source_readings:
+      - sections/section-050/module-01/course-02-golden-paths-with-a-kustomize-base.md
+    prompt: |-
+      A namespace enforces the `restricted` Pod Security Standard. A golden path manifest is applied and its pods run. Why?
+    options:
+      - id: a
+        text: "The standard is only a warning."
+        explanation: "Enforce rejects pods that do not comply."
+      - id: b
+        text: "Pods in this namespace are exempt."
+        explanation: "Nothing exempts them here."
+      - id: c
+        text: "Kustomize bypasses admission."
+        explanation: "Applied objects go through admission."
+      - id: d
+        text: "The base already sets non-root, seccomp, no privilege escalation and dropped capabilities."
+        explanation: "Correct. The path meets the standard, so the pods are admitted."
+    correct_option: d
+    explanation: "The path meets the baseline that the namespace enforces."
+
+  - id: ats077-050-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Verify adoption instead of trusting labels"
+    source_readings:
+      - sections/section-050/module-01/course-03-adoption-feedback-and-exceptions.md
+    prompt: |-
+      Three Deployments carry the label `platform.starfleet.io/path=golden`, and only one has a readiness probe and limits. What does an honest adoption report show?
+    options:
+      - id: a
+        text: "Three, because three carry the label."
+        explanation: "A label is a claim."
+      - id: b
+        text: "One verified workload, with the rest to follow up with their owners."
+        explanation: "Correct. The report counts the settings behind the label."
+      - id: c
+        text: "Zero, because labels do not count."
+        explanation: "The workload that meets the settings counts."
+      - id: d
+        text: "Two, the average."
+        explanation: "An average has no meaning here."
+    correct_option: b
+    explanation: "Report what is verified."
+
+  - id: ats077-050-q07
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Handle exceptions"
+    source_readings:
+      - sections/section-050/module-01/course-03-adoption-feedback-and-exceptions.md
+    prompt: |-
+      A workload cannot follow the path because it has no HTTP endpoint. What does the platform record?
+    options:
+      - id: a
+        text: "An exception label with a reason and a review date, so that the workload stays visible."
+        explanation: "Correct. An exception is documented and reviewed."
+      - id: b
+        text: "Nothing, because the workload is not a platform concern."
+        explanation: "It becomes invisible."
+      - id: c
+        text: "The golden label, to keep the count high."
+        explanation: "That makes the report dishonest."
+      - id: d
+        text: "A deletion request for the workload."
+        explanation: "The workload may be valid."
+    correct_option: a
+    explanation: "An exception needs a reason and a review date."
+
+  - id: ats077-050-q08
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Reason about adoption and feedback"
+    source_readings:
+      - sections/section-050/module-01/course-03-adoption-feedback-and-exceptions.md
+    prompt: |-
+      What is the main risk of making the golden path mandatory instead of optional?
+    options:
+      - id: a
+        text: "The base stops working."
+        explanation: "A mandate does not break the base."
+      - id: b
+        text: "Kustomize refuses to render."
+        explanation: "Rendering is not affected."
+      - id: c
+        text: "It produces labels on paper and workarounds in practice, and hides whether the path helps."
+        explanation: "Correct. Adoption must be earned, and feedback shows whether it helps."
+      - id: d
+        text: "Teams stop using namespaces."
+        explanation: "This does not follow."
+    correct_option: c
+    explanation: "Optional paths must earn use."
+

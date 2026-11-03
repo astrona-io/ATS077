@@ -1,5 +1,5 @@
 version: 1
-approval: CNPA requested 2026-10-11; established reading-only scope
+approval: CNPA requested 2026-10-11; hands-on scope (playgrounds, labs, capstones, quizzes) approved by the maintainer
 course:
   id: ATS077
   certification:
@@ -17,18 +17,18 @@ course:
     - Continuous Integration Fundamentals
     - Continuous Delivery and GitOps
 defaults:
-  playground: false
-  module_lab: false
-  capstone: false
-  section_quiz: false
+  playground: true
+  module_lab: true
+  capstone: true
+  section_quiz: true
   final_quiz: true
 assessment_format: YAML question banks v1, registered in assessments/index.yaml
 sections:
 - id: section-010
   title: Declarative Resource Management
   curriculum_item: Declarative Resource Management
-  capstone: false
-  section_quiz: false
+  capstone: true
+  section_quiz: true
   modules:
   - id: module-01
     title: Sufficient Intent, Rendering And Controller Contracts
@@ -38,16 +38,16 @@ sections:
     - Distinguish declarative management from a script stored in version control.
     outline:
     - Sufficient Intent, Rendering And Controller Contracts
-    playground: false
-    module_lab: false
+    playground: true
+    module_lab: true
     sources:
     - reading: sections/section-010/module-01/course-01-sufficient-intent-rendering-and-controller-contracts.md
       adapted_from: ATS065/sections/section-010/module-01/course-01-sufficient-intent-rendering-and-controller-contracts.md
 - id: section-020
   title: DevOps Practices in Platform Engineering
   curriculum_item: DevOps Practices in Platform Engineering
-  capstone: false
-  section_quiz: false
+  capstone: true
+  section_quiz: true
   modules:
   - id: module-01
     title: Shared Ownership, Feedback And Platform Enablement
@@ -57,15 +57,15 @@ sections:
     - Reason about feedback, security and supported service boundaries.
     outline:
     - Shared Ownership, Feedback And Platform Enablement
-    playground: false
-    module_lab: false
+    playground: true
+    module_lab: true
     sources:
     - reading: sections/section-020/module-01/course-01-shared-ownership-feedback-and-platform-enablement.md
       adapted_from: null
 - id: section-030
   title: Application Environments and Infrastructure Concepts
   curriculum_item: Application Environments and Infrastructure Concepts
-  capstone: false
+  capstone: true
   section_quiz: true
   modules:
   - id: module-01
@@ -76,16 +76,16 @@ sections:
     - Reason about configuration parity without assuming identical conditions.
     outline:
     - Environment Boundaries, Dependencies And Resource Isolation
-    playground: false
-    module_lab: false
+    playground: true
+    module_lab: true
     sources:
     - reading: sections/section-030/module-01/course-01-environment-boundaries-dependencies-and-resource-isolation.md
       adapted_from: null
 - id: section-040
   title: Platform Architecture and Capabilities
   curriculum_item: Platform Architecture and Capabilities
-  capstone: false
-  section_quiz: false
+  capstone: true
+  section_quiz: true
   modules:
   - id: module-01
     title: Capability Layers, Control Planes And Supported Interfaces
@@ -95,16 +95,16 @@ sections:
     - Reason about composability, failure domains and ownership.
     outline:
     - Capability Layers, Control Planes And Supported Interfaces
-    playground: false
-    module_lab: false
+    playground: true
+    module_lab: true
     sources:
     - reading: sections/section-040/module-01/course-01-capability-layers-control-planes-and-supported-interfaces.md
       adapted_from: null
 - id: section-050
   title: Platform Engineering Goals, Objectives, and Approaches
   curriculum_item: Platform Engineering Goals, Objectives, and Approaches
-  capstone: false
-  section_quiz: false
+  capstone: true
+  section_quiz: true
   modules:
   - id: module-01
     title: User Needs, Golden Paths And Incremental Platform Adoption
@@ -114,16 +114,16 @@ sections:
     - Reason about feedback, prioritization and adoption evidence.
     outline:
     - User Needs, Golden Paths And Incremental Platform Adoption
-    playground: false
-    module_lab: false
+    playground: true
+    module_lab: true
     sources:
     - reading: sections/section-050/module-01/course-01-user-needs-golden-paths-and-incremental-platform-adoption.md
       adapted_from: null
 - id: section-060
   title: Continuous Integration Fundamentals
   curriculum_item: Continuous Integration Fundamentals
-  capstone: false
-  section_quiz: false
+  capstone: true
+  section_quiz: true
   modules:
   - id: module-01
     title: Build And Release Pipelines
@@ -135,8 +135,8 @@ sections:
     outline:
     - Source Changes And Build Evidence
     - Delivery, Deployment And Promotion Decisions
-    playground: false
-    module_lab: false
+    playground: true
+    module_lab: true
     sources:
     - reading: sections/section-060/module-01/course-01-source-changes-and-build-evidence.md
       adapted_from: ATS039/sections/section-010/module-01/course-01-source-changes-and-build-evidence.md
@@ -145,8 +145,8 @@ sections:
 - id: section-070
   title: Continuous Delivery and GitOps
   curriculum_item: Continuous Delivery and GitOps
-  capstone: false
-  section_quiz: false
+  capstone: true
+  section_quiz: true
   modules:
   - id: module-01
     title: GitOps And Deployment Configuration
@@ -158,8 +158,8 @@ sections:
     outline:
     - GitOps Reconciliation And Drift
     - Helm, Kustomize And Configuration Rendering
-    playground: false
-    module_lab: false
+    playground: true
+    module_lab: true
     sources:
     - reading: sections/section-070/module-01/course-01-gitops-reconciliation-and-drift.md
       adapted_from: ATS039/sections/section-010/module-02/course-01-gitops-reconciliation-and-drift.md

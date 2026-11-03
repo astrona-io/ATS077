@@ -1,0 +1,205 @@
+# Knowledge check for section 030. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats077-030
+course_id: ATS077
+exam_code: CNPA
+status: draft
+provenance: Original practice material written for this course; not official exam questions.
+scope:
+  type: section
+  id: section-030
+  title: "Application Environments and Infrastructure Concepts"
+questions:
+  - id: ats077-030-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Distinguish environments by purpose and controls"
+    source_readings:
+      - sections/section-030/module-01/course-01-environment-boundaries-dependencies-and-resource-isolation.md
+    prompt: |-
+      A team names a namespace `prod` and labels it `environment=prod`. Nothing else is configured. Which statement is correct?
+    options:
+      - id: a
+        text: "The namespace is a protected production environment because of its name."
+        explanation: "A name and a label do not enforce anything."
+      - id: b
+        text: "Kubernetes reads the label and applies production defaults."
+        explanation: "Kubernetes does not interpret the label."
+      - id: c
+        text: "The label can be selected by policies and reports, but quotas, roles and security settings must be added to make it true."
+        explanation: "Correct. The controls give the name its meaning."
+      - id: d
+        text: "The label isolates the network of the namespace."
+        explanation: "Labels do not change the network."
+    correct_option: c
+    explanation: "A namespace is a scope, and controls attach to it."
+
+  - id: ats077-030-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain what a namespace isolates"
+    source_readings:
+      - sections/section-030/module-01/course-01-environment-boundaries-dependencies-and-resource-isolation.md
+    prompt: |-
+      A pod in namespace `starfleet` calls `http://web.dev.svc.cluster.local:9898` and gets an answer. No NetworkPolicy exists. Why does it work?
+    options:
+      - id: a
+        text: "Namespaces scope names and permissions, and they do not block network routes by themselves."
+        explanation: "Correct. Only a NetworkPolicy that the network plugin enforces blocks the route."
+      - id: b
+        text: "All namespaces share one Service list."
+        explanation: "Services are namespaced objects."
+      - id: c
+        text: "The kubelet disables isolation for pods that use the full DNS name."
+        explanation: "The kubelet does not do this."
+      - id: d
+        text: "The call works only because both namespaces have the same labels."
+        explanation: "Labels have no effect on routing."
+    correct_option: a
+    explanation: "Network isolation needs a policy."
+
+  - id: ats077-030-q03
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Reason about infrastructure dependencies"
+    source_readings:
+      - sections/section-030/module-01/course-01-environment-boundaries-dependencies-and-resource-isolation.md
+    prompt: |-
+      A pod stays in `CreateContainerConfigError` with a restart count of 0. What does this indicate?
+    options:
+      - id: a
+        text: "The application crashes at start."
+        explanation: "A crash shows as CrashLoopBackOff with restarts."
+      - id: b
+        text: "The node is out of memory."
+        explanation: "That would show eviction or a pending pod."
+      - id: c
+        text: "The image is too large."
+        explanation: "That shows as an image pull state."
+      - id: d
+        text: "A dependency the container refers to, such as a ConfigMap or Secret, is missing, so no container started."
+        explanation: "Correct. No application code ran."
+    correct_option: d
+    explanation: "A missing dependency and a failing application look different."
+
+  - id: ats077-030-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Reason about configuration parity"
+    source_readings:
+      - sections/section-030/module-01/course-03-identity-data-and-environment-lifecycle.md
+    prompt: |-
+      Which setup keeps the configuration parity that makes a test result meaningful for production?
+    options:
+      - id: a
+        text: "Different images per environment, tuned for each."
+        explanation: "The tested artifact is not the one that runs in production."
+      - id: b
+        text: "The same image in every environment, with a ConfigMap that has the same keys and values that belong to each environment."
+        explanation: "Correct. The contract is identical and the values differ on purpose."
+      - id: c
+        text: "Identical values everywhere, including the database host."
+        explanation: "Test would then use production data."
+      - id: d
+        text: "No ConfigMap in test, so defaults apply."
+        explanation: "Test would not exercise the production contract."
+    correct_option: b
+    explanation: "Parity is about the contract, not equal values."
+
+  - id: ats077-030-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain quota and default behavior"
+    source_readings:
+      - sections/section-030/module-01/course-02-quotas-limits-and-capacity-isolation.md
+    prompt: |-
+      A ResourceQuota in a namespace sets `requests.memory`. A Deployment with no resources is created and no pods appear. What is the cause and where is it visible?
+    options:
+      - id: a
+        text: "The Deployment is invalid, and `kubectl create` prints an error."
+        explanation: "The Deployment object is accepted."
+      - id: b
+        text: "The node has no free memory, and the pod is Pending."
+        explanation: "No pod is created at all."
+      - id: c
+        text: "The quota rejects pods without a memory request, and the reason is in the events of the ReplicaSet."
+        explanation: "Correct. A LimitRange default would let the pods through."
+      - id: d
+        text: "The quota deletes the Deployment after a timeout."
+        explanation: "A quota never deletes objects."
+    correct_option: c
+    explanation: "The refusal happens when the ReplicaSet creates a pod."
+
+  - id: ats077-030-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain when a LimitRange applies"
+    source_readings:
+      - sections/section-030/module-01/course-02-quotas-limits-and-capacity-isolation.md
+    prompt: |-
+      A LimitRange with a default memory limit is added to a namespace that already runs pods without limits. What happens to the running pods?
+    options:
+      - id: a
+        text: "Nothing. The defaults apply to pods created after the LimitRange exists."
+        explanation: "Correct. Recreate the pods to receive the defaults."
+      - id: b
+        text: "They are restarted at once with the default."
+        explanation: "Existing pods are not changed."
+      - id: c
+        text: "They are evicted."
+        explanation: "A LimitRange does not evict."
+      - id: d
+        text: "Their limits are patched in place."
+        explanation: "Most pod resource fields cannot be changed in place."
+    correct_option: a
+    explanation: "Admission acts at creation."
+
+  - id: ats077-030-q07
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Reason about identity boundaries between environments"
+    source_readings:
+      - sections/section-030/module-01/course-03-identity-data-and-environment-lifecycle.md
+    prompt: |-
+      A service account in `test` has a RoleBinding to the `view` ClusterRole in `test`. Which statement is true?
+    options:
+      - id: a
+        text: "It can read pods and Secrets in every namespace."
+        explanation: "A RoleBinding is limited to its namespace, and view excludes Secrets."
+      - id: b
+        text: "It can read Secrets in `test` only."
+        explanation: "The `view` role does not include Secrets."
+      - id: c
+        text: "It can read pods in `prod` because ClusterRoles are cluster-wide."
+        explanation: "The RoleBinding scopes the rules to `test`."
+      - id: d
+        text: "It can read most namespaced objects in `test`, but not Secrets, and nothing in `prod`."
+        explanation: "Correct. The absence of a binding in `prod` is the boundary."
+    correct_option: d
+    explanation: "A ClusterRole used by a RoleBinding is valid in one namespace."
+
+  - id: ats077-030-q08
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Explain environment lifecycle and cleanup"
+    source_readings:
+      - sections/section-030/module-01/course-03-identity-data-and-environment-lifecycle.md
+    prompt: |-
+      A team deletes the namespace `preview-42`, which held a Deployment, a ConfigMap and a claim on a volume with reclaim policy `Retain`. What remains?
+    options:
+      - id: a
+        text: "Everything remains until the Deployment is deleted first."
+        explanation: "The delete removes the namespaced objects."
+      - id: b
+        text: "The retained volume and any external data remain, and the namespaced objects are gone."
+        explanation: "Correct. Cleanup must list what the namespace delete does not cover."
+      - id: c
+        text: "Only the ConfigMap remains."
+        explanation: "ConfigMaps are namespaced."
+      - id: d
+        text: "Nothing remains, including external databases."
+        explanation: "External resources are outside the namespace."
+    correct_option: b
+    explanation: "A namespace delete removes namespaced objects only."
+
