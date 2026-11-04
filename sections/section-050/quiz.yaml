@@ -4,7 +4,7 @@ kind: question_bank
 id: ats077-050
 course_id: ATS077
 exam_code: CNPA
-status: draft
+status: alpha
 provenance: Original practice material written for this course; not official exam questions.
 scope:
   type: section
