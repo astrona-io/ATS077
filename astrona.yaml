@@ -136,7 +136,7 @@ modules:
       difficulty: intermediate
       estimated_duration: 25m
       topic: devops
-      task_kind: fix
+      task_kind: troubleshooting
       tags: [labels, readiness-probe, pod-security, securitycontext, ownership]
       learning_goals:
         - Put an ownership label in pod templates so running pods carry it
@@ -159,7 +159,7 @@ modules:
       difficulty: advanced
       estimated_duration: 40m
       topic: devops
-      task_kind: fix
+      task_kind: troubleshooting
       tags: [rollout, rollback, readiness-probe, pod-security, rbac, ownership]
       learning_goals:
         - Recover a stuck rollout with rollout undo and protect the next release with a readiness probe
@@ -229,7 +229,7 @@ modules:
       difficulty: advanced
       estimated_duration: 40m
       topic: environments
-      task_kind: fix
+      task_kind: troubleshooting
       tags: [namespaces, pod-security, rbac, secrets, quota]
       learning_goals:
         - Label environments, enforce restricted in prod and cap test
